@@ -1,0 +1,14 @@
+# local environment / secrets
+.env
+.env.*.local
+**/.env
+**/.env.*.local
+
+# runtime data
+backend/app/data/*.json
+backend/data/*.json
+frontend/.next/
+frontend/node_modules/
+__pycache__/
+*.pyc
+.DS_Store

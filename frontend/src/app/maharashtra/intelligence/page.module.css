@@ -1,0 +1,20 @@
+.mh-intel{min-height:100vh;background:#f5f7fa;color:#172033;padding-bottom:64px}
+.mh-intel__hero{padding:64px max(24px,6vw);background:#fff;border-bottom:1px solid #e4e8ee;display:flex;justify-content:space-between;gap:32px;align-items:flex-end}
+.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:800;color:#9b6a13}
+.mh-intel h1{font-size:clamp(32px,5vw,54px);line-height:1.05;margin:12px 0}
+.mh-intel__hero p{max-width:760px;color:#667085;font-size:16px;line-height:1.7}
+.back-link{border:1px solid #d9dee7;padding:12px 16px;border-radius:8px;text-decoration:none;color:#172033;background:#fff}
+.mh-intel__filters{max-width:1180px;margin:28px auto 18px;padding:0 24px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px}
+.mh-intel label{display:grid;gap:7px;font-size:12px;font-weight:700;color:#475467}
+.mh-intel input,.mh-intel select{height:46px;border:1px solid #d9dee7;border-radius:8px;background:#fff;padding:0 12px;font:inherit;color:#172033}
+.mh-intel__grid{max-width:1180px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.service-card{background:#fff;border:1px solid #e4e8ee;border-radius:12px;padding:22px;box-shadow:0 2px 8px rgba(16,24,40,.03)}
+.service-card__meta{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#9b6a13}
+.service-card h2{font-size:20px;margin:10px 0 8px}
+.service-card p{color:#667085;margin:0 0 20px}
+.service-card__footer{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #eef1f4;padding-top:14px;font-size:12px;color:#667085}
+.service-card a{font-weight:800;color:#183b67;text-decoration:none}
+.mh-intel__empty,.mh-intel__error{max-width:1132px;margin:20px auto;padding:28px 24px;background:#fff;border:1px solid #e4e8ee;border-radius:12px}
+.mh-intel__error{color:#9b1c1c}
+@media(max-width:900px){.mh-intel__filters{grid-template-columns:1fr 1fr}.mh-intel__grid{grid-template-columns:1fr 1fr}.mh-intel__hero{align-items:flex-start;flex-direction:column}}
+@media(max-width:600px){.mh-intel__filters{grid-template-columns:1fr}.mh-intel__grid{grid-template-columns:1fr}.mh-intel__hero{padding:42px 20px}.mh-intel__filters,.mh-intel__grid{padding-left:20px;padding-right:20px}}

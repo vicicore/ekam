@@ -2,34 +2,27 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LanguageProvider } from "@/lib/LanguageProvider";
 import { NavBar } from "@/components/NavBar";
+import SkipLink from "@/components/SkipLink";
+import AccessibilityToolbar from "@/components/AccessibilityToolbar";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "OneGov / SETU",
-  description:
-    "Government service orchestration for Maharashtra — one citizen goal, coordinated across departments.",
+  title: "SETU | Maharashtra Citizen Services",
+  description: "A unified, consent-aware citizen service experience for Maharashtra government services.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-slate-50">
         <LanguageProvider>
+          <SkipLink />
           <NavBar />
-          <div className="flex-1">{children}</div>
+          <AccessibilityToolbar />
+          <main id="main-content" className="flex-1">{children}</main>
         </LanguageProvider>
       </body>
     </html>

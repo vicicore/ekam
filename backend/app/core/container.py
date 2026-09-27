@@ -22,6 +22,8 @@ from app.repositories.local.auth_repository import LocalJsonAuthRepository
 from app.repositories.local.citizen_repository import LocalJsonCitizenRepository
 from app.repositories.local.connector_request_repository import LocalJsonConnectorRequestRepository
 from app.repositories.local.document_repository import LocalJsonDocumentRepository
+from app.repositories.local.phase17_repositories import (LocalJsonOfficerRepository, LocalJsonConnectorJobRepository, LocalJsonDeadLetterRepository, LocalJsonMetricEventRepository)
+from app.repositories.supabase.core_repositories import (SupabaseApplicationRepository, SupabaseAuditLogRepository, SupabaseCitizenRepository, SupabaseDocumentRepository, SupabaseConnectorRequestRepository, SupabaseAuthRepository, SupabaseOfficerRepository, SupabaseConnectorJobRepository, SupabaseDeadLetterRepository, SupabaseMetricEventRepository)
 from app.services.connectors.base import GovernmentConnector
 from app.services.connectors.education import EducationMockConnector
 from app.services.connectors.finance import FinanceMockConnector
@@ -44,6 +46,8 @@ def get_application_repository() -> ApplicationRepository:
     settings = get_settings()
     if settings.persistence_backend == "local":
         return LocalJsonApplicationRepository()
+    if settings.persistence_backend == "supabase":
+        return SupabaseApplicationRepository()
     raise NotImplementedError(
         f"persistence_backend={settings.persistence_backend!r} has no repository wired yet"
     )
@@ -54,6 +58,8 @@ def get_audit_log_repository() -> AuditLogRepository:
     settings = get_settings()
     if settings.persistence_backend == "local":
         return LocalJsonAuditLogRepository()
+    if settings.persistence_backend == "supabase":
+        return SupabaseAuditLogRepository()
     raise NotImplementedError(
         f"persistence_backend={settings.persistence_backend!r} has no audit repository wired yet"
     )
@@ -74,6 +80,8 @@ def get_connector_request_repository() -> ConnectorRequestRepository:
     settings = get_settings()
     if settings.persistence_backend == "local":
         return LocalJsonConnectorRequestRepository()
+    if settings.persistence_backend == "supabase":
+        return SupabaseConnectorRequestRepository()
     raise NotImplementedError(
         f"persistence_backend={settings.persistence_backend!r} has no connector-request repository wired yet"
     )
@@ -129,6 +137,8 @@ def get_citizen_repository() -> CitizenRepository:
     settings = get_settings()
     if settings.persistence_backend == "local":
         return LocalJsonCitizenRepository()
+    if settings.persistence_backend == "supabase":
+        return SupabaseCitizenRepository()
     raise NotImplementedError(
         f"persistence_backend={settings.persistence_backend!r} has no citizen repository wired yet"
     )
@@ -139,6 +149,8 @@ def get_document_repository() -> DocumentRepository:
     settings = get_settings()
     if settings.persistence_backend == "local":
         return LocalJsonDocumentRepository()
+    if settings.persistence_backend == "supabase":
+        return SupabaseDocumentRepository()
     raise NotImplementedError(
         f"persistence_backend={settings.persistence_backend!r} has no document repository wired yet"
     )
@@ -157,10 +169,37 @@ def get_document_vault_service() -> DocumentVaultService:
 
 
 @lru_cache
+def get_officer_repository():
+    if get_settings().persistence_backend == "supabase":
+        return SupabaseOfficerRepository()
+    return LocalJsonOfficerRepository()
+
+@lru_cache
+def get_connector_job_repository():
+    if get_settings().persistence_backend == "supabase":
+        return SupabaseConnectorJobRepository()
+    return LocalJsonConnectorJobRepository()
+
+@lru_cache
+def get_dead_letter_repository():
+    if get_settings().persistence_backend == "supabase":
+        return SupabaseDeadLetterRepository()
+    return LocalJsonDeadLetterRepository()
+
+@lru_cache
+def get_metric_event_repository():
+    if get_settings().persistence_backend == "supabase":
+        return SupabaseMetricEventRepository()
+    return LocalJsonMetricEventRepository()
+
+
+@lru_cache
 def get_auth_repository() -> AuthRepository:
     settings = get_settings()
     if settings.persistence_backend == "local":
         return LocalJsonAuthRepository()
+    if settings.persistence_backend == "supabase":
+        return SupabaseAuthRepository()
     raise NotImplementedError(
         f"persistence_backend={settings.persistence_backend!r} has no auth repository wired yet"
     )
@@ -169,3 +208,42 @@ def get_auth_repository() -> AuthRepository:
 @lru_cache
 def get_auth_service() -> AuthService:
     return AuthService(get_auth_repository())
+
+
+# Phase 14/16 additive repositories
+from app.repositories.local.phase14_repositories import (
+    LocalJsonAssignmentRepository, LocalJsonNotificationRepository as Phase14NotificationRepository, LocalJsonAuditEventRepository,
+)
+from app.repositories.local.phase16_repositories import LocalJsonWebhookDeliveryRepository, LocalJsonIdempotencyRepository
+from app.repositories.notification_repository import NotificationRepository as Phase22NotificationRepository
+
+@lru_cache
+def get_assignment_repository():
+    return LocalJsonAssignmentRepository()
+
+@lru_cache
+def get_notification_repository():
+    # Phase 22 is the canonical citizen notification API repository.
+    return Phase22NotificationRepository(f"{get_settings().local_data_dir}/notifications-v2.json")
+
+@lru_cache
+def get_audit_event_repository():
+    return LocalJsonAuditEventRepository()
+
+@lru_cache
+def get_webhook_delivery_repository():
+    return LocalJsonWebhookDeliveryRepository()
+
+@lru_cache
+def get_idempotency_repository():
+    return LocalJsonIdempotencyRepository()
+
+
+@lru_cache
+def get_grievance_repository():
+    from app.repositories.local.grievance_repository import LocalJsonGrievanceRepository
+    return LocalJsonGrievanceRepository()
+
+@lru_cache
+def get_phase14_notification_repository():
+    return Phase14NotificationRepository()

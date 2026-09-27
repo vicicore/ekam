@@ -1,0 +1,25 @@
+# Example deployment workflow.
+# Replace the deployment section with the actual hosting provider's
+# documented action. Do not store cloud credentials in source files.
+
+name: SETU Production Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type DEPLOY to continue"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: ${{ inputs.confirm == 'DEPLOY' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Production deployment gate
+        run: echo "CI passed. Connect this job to the approved deployment provider."

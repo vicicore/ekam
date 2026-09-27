@@ -1,83 +1,132 @@
-"use client";
+ "use client";
 
 import Link from "next/link";
-import { useLanguage } from "@/lib/LanguageProvider";
+
+const quick = [
+  ["Find a Service", "Search citizen services and application pathways.", "/services"],
+  ["Explore Schemes", "Discover welfare and support scheme pathways.", "/schemes"],
+  ["Track Application", "Check application stages and next actions.", "/journeys"],
+  ["Document Vault", "Review and reuse your saved documents.", "/vault"],
+];
+
+const services = [
+  ["Certificates & Documents", "Birth, income, residence and other citizen documentation.", "/services"],
+  ["Revenue & Land", "Explore revenue, land and property-related pathways.", "/services"],
+  ["Transport", "Find transport-related services and application journeys.", "/services"],
+  ["Social Welfare", "Access welfare-oriented services and support.", "/services"],
+  ["Education", "Explore education services and scheme pathways.", "/services"],
+  ["Health", "Find public health services and assistance.", "/services"],
+];
 
 export default function Home() {
-  const { t } = useLanguage();
-
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-4 py-14 sm:px-6">
-      <header className="mb-12 text-center">
-        <span className="inline-block rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
-          Government of Maharashtra · SIH260129
-        </span>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-slate-900">
-          OneGov / SETU (सेतु)
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">{t("home_tagline")}</p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Link
-            href="/services"
-            className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
-          >
-            {t("home_tell_us")}
-          </Link>
-          <Link
-            href="/demo"
-            className="rounded-lg border border-orange-300 px-5 py-2.5 text-sm font-medium text-orange-700 transition hover:bg-orange-50"
-          >
-            {t("nav_demo")}
-          </Link>
-        </div>
-      </header>
-
-      <section className="mb-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {t("home_how_it_works")}
-        </h2>
-        <div className="grid grid-cols-1 gap-4 text-sm text-slate-600 sm:grid-cols-5">
-          {[
-            "Citizen states a goal",
-            "SETU finds required services",
-            "Checks what's already verified",
-            "Requests consent, coordinates departments",
-            "One unified journey, tracked to completion",
-          ].map((step, i) => (
-            <div key={step} className="flex flex-col items-center text-center">
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
-                {i + 1}
-              </div>
-              {step}
+    <main className="setu-final-home">
+      <section className="setu-final-hero">
+        <div className="setu-final-container setu-hero-grid">
+          <div>
+            <div className="setu-final-kicker">MAHARASHTRA CITIZEN SERVICES</div>
+            <h1>One place to discover, apply and track government services.</h1>
+            <p>
+              SETU brings services, schemes, documents, application journeys and
+              citizen support into one organized digital experience.
+            </p>
+            <div className="setu-hero-actions">
+              <Link href="/services" className="setu-final-primary">Find a service</Link>
+              <Link href="/assistant" className="setu-final-secondary">Ask SETU Assistant</Link>
             </div>
+            <div className="setu-hero-note">
+              <span>✓</span> Reuse eligible profile and document information across service journeys.
+            </div>
+          </div>
+          <div className="setu-hero-panel">
+            <div className="setu-hero-panel-head">
+              <span>MY SETU</span><b>Citizen Dashboard</b>
+            </div>
+            <div className="setu-mini-stat-grid">
+              <div><strong>04</strong><span>Active journeys</span></div>
+              <div><strong>12</strong><span>Saved documents</span></div>
+              <div><strong>03</strong><span>Pending actions</span></div>
+              <div><strong>07</strong><span>Completed services</span></div>
+            </div>
+            <Link href="/profile" className="setu-panel-link">Open My SETU →</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="setu-final-container setu-quick-section">
+        <div className="setu-final-section-head">
+          <div><div className="setu-final-kicker">QUICK ACCESS</div><h2>Start with what you need</h2></div>
+          <Link href="/services">View all services →</Link>
+        </div>
+        <div className="setu-quick-grid">
+          {quick.map(([title, text, href], i) => (
+            <Link href={href} className="setu-quick-card" key={title}>
+              <span>0{i + 1}</span><div><h3>{title}</h3><p>{text}</p></div><b>→</b>
+            </Link>
           ))}
         </div>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          How SETU is built
-        </h2>
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-2 text-xs font-medium text-slate-600">
-          {["Citizen", "OneGov UI", "Profile + Consent", "Service Orchestrator", "Connector / Adapter Layer", "Government Departments"].map(
-            (node, i, arr) => (
-              <span key={node} className="flex items-center gap-2">
-                <span className="rounded-full border border-slate-300 bg-slate-50 px-3 py-1.5">{node}</span>
-                {i < arr.length - 1 && <span className="text-slate-300">→</span>}
-              </span>
-            ),
-          )}
+      <section className="setu-final-state">
+        <div className="setu-final-container setu-state-grid-final">
+          <div>
+            <div className="setu-final-kicker">MAHARASHTRA GOVERNMENT LAYER</div>
+            <h2>Navigate services by district and administrative division.</h2>
+            <p>
+              Explore Maharashtra districts, service categories and public-service
+              pathways through one structured interface.
+            </p>
+            <Link href="/maharashtra" className="setu-final-primary">Explore Maharashtra</Link>
+          </div>
+          <div className="setu-district-visual">
+            <div className="setu-map-outline">MAHARASHTRA</div>
+            <div className="setu-map-points"><span>36 Districts</span><span>6 Divisions</span><span>Citizen Services</span></div>
+          </div>
         </div>
-        <p className="mx-auto max-w-2xl text-center text-base font-medium text-slate-900">
-          {t("home_central_message")}
-        </p>
-        <div className="mx-auto mt-5 grid max-w-2xl grid-cols-1 gap-2 text-sm text-slate-600 sm:grid-cols-2">
-          <p>• Existing portals remain authoritative.</p>
-          <p>• SETU orchestrates, it doesn&apos;t replace.</p>
-          <p>• Connectors isolate each department&apos;s own API.</p>
-          <p>• Consent controls every data share.</p>
-          <p>• The orchestrator manages dependencies.</p>
-          <p>• One timeline hides departmental fragmentation.</p>
+      </section>
+
+      <section className="setu-final-container setu-services-section">
+        <div className="setu-final-section-head">
+          <div><div className="setu-final-kicker">SERVICE DIRECTORY</div><h2>Government services</h2></div>
+          <Link href="/services">Browse directory →</Link>
+        </div>
+        <div className="setu-service-grid-final">
+          {services.map(([title, text, href], i) => (
+            <Link href={href} key={title} className="setu-service-card-final">
+              <span>0{i + 1}</span><h3>{title}</h3><p>{text}</p><b>Explore →</b>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="setu-final-support">
+        <div className="setu-final-container setu-support-grid">
+          <div>
+            <div className="setu-final-kicker">CITIZEN SUPPORT</div>
+            <h2>Need help understanding a service?</h2>
+            <p>Ask SETU Assistant for guided navigation across services, schemes, documents, journeys and grievances.</p>
+          </div>
+          <div className="setu-support-actions">
+            <Link href="/assistant" className="setu-final-primary">Open SETU Assistant</Link>
+            <Link href="/grievance" className="setu-final-secondary">Raise a grievance</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="setu-final-container setu-final-process">
+        <div className="setu-final-section-head">
+          <div><div className="setu-final-kicker">HOW SETU WORKS</div><h2>A connected citizen journey</h2></div>
+        </div>
+        <div className="setu-process-grid">
+          {[
+            ["01", "Create your profile", "Keep essential citizen information organized in one place."],
+            ["02", "Discover", "Find a service or scheme using structured categories and guidance."],
+            ["03", "Prepare", "Review eligibility and required documents before applying."],
+            ["04", "Apply & track", "Continue through a journey and monitor its progress."],
+            ["05", "Get support", "Use the assistant or grievance channel when you need help."],
+          ].map(([n, title, text]) => (
+            <div key={n}><span>{n}</span><h3>{title}</h3><p>{text}</p></div>
+          ))}
         </div>
       </section>
     </main>

@@ -122,3 +122,117 @@ class SessionRecord(BaseModel):
     role: str
     created_at: datetime
     expires_at: datetime
+
+# Phase 17/18 operational records
+class OfficerProfileRecord(BaseModel):
+    officer_id: str
+    display_name: str
+    department: str
+    district: str | None = None
+    active: bool = True
+    created_at: datetime
+    updated_at: datetime
+
+class ConnectorJobRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    operation: str
+    department: str
+    service_code: str
+    external_reference: str | None = None
+    payload: dict = Field(default_factory=dict)
+    status: str = "queued"
+    attempts: int = 0
+    max_attempts: int = 5
+    next_attempt_at: datetime
+    last_error: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+class DeadLetterRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    job_id: str
+    reason: str
+    attempts: int
+    payload: dict = Field(default_factory=dict)
+    created_at: datetime
+
+class MetricEventRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    name: str
+    value: float = 1
+    labels: dict = Field(default_factory=dict)
+    created_at: datetime
+
+
+# Phase 14 — officer assignment / audit boundary
+class AssignmentRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    application_id: str
+    service_code: str
+    department: str
+    officer_id: str
+    status: str = "assigned"
+    note: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+class NotificationRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    recipient_id: str
+    type: str
+    title: str
+    message: str
+    resource_type: str | None = None
+    resource_id: str | None = None
+    created_at: datetime
+
+class AuditEventRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    actor_id: str
+    actor_role: str
+    action: str
+    resource_type: str
+    resource_id: str | None = None
+    department: str | None = None
+    metadata: dict = Field(default_factory=dict)
+    created_at: datetime
+
+# Phase 16 — signed webhook / idempotency boundary
+class WebhookDeliveryRecord(BaseModel):
+    event_id: str
+    external_reference: str
+    event_type: str
+    status: str = "received"
+    error: str | None = None
+    received_at: datetime
+    processed_at: datetime | None = None
+
+class IdempotencyRecord(BaseModel):
+    key: str
+    operation: str
+    response_status: int = 200
+    response_body: dict = Field(default_factory=dict)
+    created_at: datetime
+
+
+class GrievanceEventRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    grievance_id: str
+    status: str
+    note: str
+    actor: str
+    created_at: datetime
+
+class GrievanceRecord(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    citizen_id: str
+    title: str
+    category: str
+    department: str | None = None
+    description: str
+    priority: str = "normal"
+    status: str = "submitted"
+    acknowledgement_number: str
+    created_at: datetime
+    updated_at: datetime
+    events: list[GrievanceEventRecord] = Field(default_factory=list)

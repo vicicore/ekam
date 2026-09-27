@@ -1,13 +1,14 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { Language, TranslationKey, translations } from "./translations";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Language, languageLabels, t as translate } from "./translations";
 
-interface LanguageContextValue {
+type LanguageContextValue = {
   language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (key: TranslationKey) => string;
-}
+  setLanguage: (language: Language) => void;
+  t: (key: string) => string;
+  labels: typeof languageLabels;
+};
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
@@ -15,41 +16,32 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>("en");
 
   useEffect(() => {
-    // Reading localStorage — an external system unavailable during SSR
-    // — is the documented "synchronize with an external system" case,
-    // not derived state.
-    try {
-      const stored = localStorage.getItem("setu-language");
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (stored === "en" || stored === "mr") setLanguageState(stored);
-    } catch {
-      // localStorage unavailable (private browsing, etc.) — default to English.
+    const stored = window.localStorage.getItem("setu-language") as Language | null;
+    if (stored === "en" || stored === "hi" || stored === "mr") {
+      setLanguageState(stored);
     }
   }, []);
 
-  const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang);
-    try {
-      localStorage.setItem("setu-language", lang);
-    } catch {
-      // Best-effort only; language still applies for this session.
-    }
-  }, []);
+  useEffect(() => {
+    window.localStorage.setItem("setu-language", language);
+    document.documentElement.lang = language;
+  }, [language]);
 
-  const t = useCallback(
-    (key: TranslationKey) => translations[key][language],
-    [language],
+  const value = useMemo(
+    () => ({
+      language,
+      setLanguage: (next: Language) => setLanguageState(next),
+      t: (key: string) => translate(language, key),
+      labels: languageLabels,
+    }),
+    [language]
   );
 
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 
-export function useLanguage(): LanguageContextValue {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) throw new Error("useLanguage must be used within LanguageProvider");
-  return ctx;
+export function useLanguage() {
+  const context = useContext(LanguageContext);
+  if (!context) throw new Error("useLanguage must be used inside LanguageProvider");
+  return context;
 }

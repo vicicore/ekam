@@ -7,12 +7,14 @@ from fastapi.responses import JSONResponse
 
 from app.api.v1.router import api_router
 from app.core.config import get_settings
+from app.middleware.security_middleware import SetuSecurityMiddleware
 
 logger = logging.getLogger("setu")
 
 settings = get_settings()
 
 app = FastAPI(title=settings.app_name)
+app.add_middleware(SetuSecurityMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

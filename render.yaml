@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: setu-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: PERSISTENCE_BACKEND
+        value: local
+      - key: STORAGE_BACKEND
+        value: local
+      - key: DEMO_MODE_ENABLED
+        value: "true"

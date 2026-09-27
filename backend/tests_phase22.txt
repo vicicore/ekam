@@ -1,0 +1,8 @@
+Phase 22 suggested tests:
+1. create notification
+2. list only current recipient notifications
+3. unread_only filter
+4. recipient can mark own notification read
+5. another citizen cannot mark it read
+6. admin-only creation endpoint rejects citizen
+7. notification validation rejects empty title/message

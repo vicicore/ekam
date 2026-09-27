@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ApiError, JourneyDetailView, journeyApi } from "@/lib/api";
@@ -23,6 +23,7 @@ export default function JourneyDetailPage() {
 
   const load = useCallback(async () => {
     try {
+      setError(null);
       setJourney(await journeyApi.get(applicationId, token ?? undefined));
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t("error_generic"));
@@ -52,217 +53,341 @@ export default function JourneyDetailPage() {
     }
   };
 
+  const metrics = useMemo(() => {
+    if (!journey) {
+      return { done: 0, active: 0, blocked: 0, total: 0, progress: 0 };
+    }
+
+    const done = journey.steps.filter(
+      (step) => step.status === "verified" || step.status === "ready",
+    ).length;
+    const active = journey.steps.filter((step) => step.status === "in_progress").length;
+    const blocked = journey.steps.filter(
+      (step) => step.status === "blocked" || step.status === "rejected",
+    ).length;
+    const total = journey.steps.length;
+
+    return {
+      done,
+      active,
+      blocked,
+      total,
+      progress: total ? Math.round((done / total) * 100) : 0,
+    };
+  }, [journey]);
+
   if (!isLoggedIn) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <p className="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-600">
-          <Link href="/login" className="font-medium underline">
-            Log in
-          </Link>{" "}
-          to view this journey.
-        </p>
+      <main className="setu-page">
+        <section className="setu-login-panel">
+          <p className="setu-eyebrow">APPLICATION TRACKER</p>
+          <h1>Sign in to view this application</h1>
+          <p>Your SETU journey, documents, consent and department progress are available after sign in.</p>
+          <Link href="/login" className="setu-button setu-button-primary">
+            Log in to SETU
+          </Link>
+        </section>
       </main>
     );
   }
 
-  if (error) {
+  if (!journey && !error) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
-          {error}
+      <main className="setu-page">
+        <div className="setu-journey-skeleton" aria-label="Loading application">
+          <div className="setu-skeleton-line wide" />
+          <div className="setu-skeleton-line medium" />
+          <div className="setu-skeleton-panel" />
+          <div className="setu-skeleton-panel" />
         </div>
       </main>
     );
   }
 
-  if (!journey) {
+  if (error && !journey) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <p className="text-slate-500">{t("loading")}</p>
+      <main className="setu-page">
+        <div className="setu-alert setu-alert-error">{error}</div>
+        <Link href="/journeys" className="setu-button setu-button-secondary">
+          ← Back to applications
+        </Link>
       </main>
     );
   }
 
-  const verifiedCount = journey.steps.filter(
-    (s) => s.status === "verified" || s.status === "ready",
-  ).length;
-  const progressPct = Math.round((verifiedCount / journey.steps.length) * 100);
+  if (!journey) return null;
 
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-4 py-10 sm:px-6">
-      <header className="mb-6">
-        <span
-          className={`inline-block rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-            journey.is_complete
-              ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-              : "border-blue-300 bg-blue-50 text-blue-700"
-          }`}
-        >
-          {journey.is_complete ? "Complete" : "In progress"}
-        </span>
-        <h1 className="mt-3 text-3xl font-bold text-slate-900">{journey.life_event_title_en}</h1>
-        <p className="text-slate-600">“{journey.goal_statement_en}”</p>
-        <p className="mt-1 text-xs text-slate-400 font-mono">{journey.application_id}</p>
+    <main className="setu-page">
+      <div className="setu-breadcrumb">
+        <Link href="/profile">My SETU</Link>
+        <span>/</span>
+        <Link href="/journeys">Applications</Link>
+        <span>/</span>
+        <strong>{journey.application_id}</strong>
+      </div>
+
+      {error && <div className="setu-alert setu-alert-error">{error}</div>}
+
+      <header className="setu-journey-hero">
+        <div>
+          <div className="setu-journey-title-row">
+            <span
+              className={`setu-status ${
+                journey.is_complete ? "setu-status-success" : "setu-status-progress"
+              }`}
+            >
+              {journey.is_complete ? "Completed" : "In progress"}
+            </span>
+            <span className="setu-application-id">{journey.application_id}</span>
+          </div>
+          <p className="setu-eyebrow">SERVICE JOURNEY</p>
+          <h1>{journey.life_event_title_en}</h1>
+          <p className="setu-journey-goal">{journey.goal_statement_en}</p>
+        </div>
+        <Link href="/journeys" className="setu-button setu-button-secondary">
+          All applications
+        </Link>
       </header>
 
-      <section className="mb-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="font-medium text-slate-700">Overall progress</span>
-          <span className="text-slate-500">{progressPct}%</span>
-        </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
-          <div
-            className="h-full rounded-full bg-slate-900 transition-all"
-            style={{ width: `${progressPct}%` }}
-          />
+      <section className="setu-progress-panel">
+        <div className="setu-progress-top">
+          <div>
+            <p className="setu-eyebrow">APPLICATION PROGRESS</p>
+            <h2>{metrics.progress}% complete</h2>
+          </div>
+          <span>{metrics.done} of {metrics.total} stages completed</span>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-amber-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
-              {t("journey_current_blocker")}
-            </p>
-            <p className="mt-1 text-sm text-amber-900">
-              {journey.current_blocker ?? t("journey_none")}
-            </p>
-          </div>
-          <div className="rounded-lg bg-blue-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
-              {t("journey_next_action")}
-            </p>
-            <p className="mt-1 text-sm text-blue-900">{journey.next_action}</p>
-          </div>
+        <div className="setu-progress-track" aria-label={`Application ${metrics.progress}% complete`}>
+          <div className="setu-progress-fill" style={{ width: `${metrics.progress}%` }} />
+        </div>
+
+        <div className="setu-progress-stats">
+          <Metric label="Completed" value={metrics.done} />
+          <Metric label="In progress" value={metrics.active} />
+          <Metric label="Needs attention" value={metrics.blocked} />
+          <Metric label="Total stages" value={metrics.total} />
         </div>
       </section>
 
-      <section className="mb-6 space-y-4">
-        {journey.steps.map((step) => {
-          const canGrant =
-            (step.status === "not_started" || step.status === "ready") && !step.consent?.is_active;
-          const canRevoke = step.consent?.is_active;
-          const canSubmit =
-            (step.status === "not_started" || step.status === "ready") && step.consent?.is_active;
-          const canApprove = step.status === "in_progress";
-
-          return (
-            <div key={step.service_code} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <p className="font-semibold text-slate-900">{step.display_name}</p>
-                  <p className="text-xs text-slate-500">
-                    {step.department}
-                    {step.external_reference && ` · Ref: ${step.external_reference}`}
-                  </p>
-                </div>
-                <span
-                  className={`whitespace-nowrap rounded-full border px-2 py-0.5 text-xs font-medium ${STATUS_CLASSES[step.status]}`}
-                >
-                  {t(STATUS_LABEL_KEY[step.status])}
-                </span>
-              </div>
-
-              {step.blocked_reason && (
-                <p className="mt-2 text-xs text-amber-700">⏸ {step.blocked_reason}</p>
-              )}
-              {step.requires_service_codes.length > 0 && (
-                <p className="mt-1 text-xs text-slate-400">
-                  ↳ requires {step.requires_service_codes.join(", ")}
-                </p>
-              )}
-              {step.sla_status && (
-                <p className="mt-1 text-xs font-medium text-slate-500">
-                  SLA: {step.sla_status}
-                  {step.sla_due_at && ` · due ${new Date(step.sla_due_at).toLocaleDateString()}`}
-                </p>
-              )}
-
-              <div className="mt-3 rounded-lg bg-slate-50 p-3 text-xs text-slate-600">
-                <p className="font-semibold uppercase tracking-wide text-slate-400">
-                  {t("consent_title")}
-                </p>
-                {step.consent ? (
-                  <p className="mt-1">
-                    Shared with <span className="font-medium">{step.consent.recipient_department}</span>{" "}
-                    for &ldquo;{step.consent.purpose}&rdquo; ·{" "}
-                    {step.consent.is_active ? (
-                      <span className="text-emerald-700">active until{" "}
-                        {new Date(step.consent.expires_at).toLocaleDateString()}</span>
-                    ) : (
-                      <span className="text-red-700">revoked</span>
-                    )}
-                  </p>
-                ) : (
-                  <p className="mt-1 text-slate-400">No consent granted yet for this service.</p>
-                )}
-              </div>
-
-              <div className="mt-3 flex flex-wrap gap-2">
-                <ActionButton
-                  label={t("action_grant_consent")}
-                  disabled={!canGrant}
-                  pending={pendingAction === "consent" && pendingService === step.service_code}
-                  onClick={() =>
-                    runAction(step.service_code, "consent", () =>
-                      journeyApi.grantConsent(
-                        applicationId,
-                        step.service_code,
-                        `Process ${step.display_name}`,
-                        token ?? undefined,
-                      ),
-                    )
-                  }
-                />
-                <ActionButton
-                  label={t("action_revoke_consent")}
-                  disabled={!canRevoke}
-                  variant="secondary"
-                  pending={pendingAction === "revoke" && pendingService === step.service_code}
-                  onClick={() =>
-                    runAction(step.service_code, "revoke", () =>
-                      journeyApi.revokeConsent(applicationId, step.service_code, token ?? undefined),
-                    )
-                  }
-                />
-                <ActionButton
-                  label={`${t("action_submit")} to ${step.department}`}
-                  disabled={!canSubmit}
-                  pending={pendingAction === "submit" && pendingService === step.service_code}
-                  onClick={() =>
-                    runAction(step.service_code, "submit", () =>
-                      journeyApi.submit(applicationId, step.service_code, {}, token ?? undefined),
-                    )
-                  }
-                />
-                <ActionButton
-                  label={t("action_approve")}
-                  disabled={!canApprove}
-                  pending={pendingAction === "approve" && pendingService === step.service_code}
-                  onClick={() =>
-                    runAction(step.service_code, "approve", () =>
-                      journeyApi.approve(applicationId, step.service_code, token ?? undefined),
-                    )
-                  }
-                />
+      <div className="setu-journey-layout">
+        <div>
+          <section className="setu-section">
+            <div className="setu-section-heading">
+              <div>
+                <p className="setu-eyebrow">DEPARTMENT WORKFLOW</p>
+                <h2>Service stages</h2>
               </div>
             </div>
-          );
-        })}
-      </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          {t("journey_timeline")}
-        </h2>
-        <ol className="space-y-2 text-sm">
-          {journey.timeline.map((event, i) => (
-            <li key={i} className="flex gap-3">
-              <span className="text-slate-400">{i + 1}.</span>
-              <span className="text-slate-700">{event}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
+            <div className="setu-stage-list">
+              {journey.steps.map((step, index) => {
+                const canGrant =
+                  (step.status === "not_started" || step.status === "ready") &&
+                  !step.consent?.is_active;
+                const canRevoke = Boolean(step.consent?.is_active);
+                const canSubmit =
+                  (step.status === "not_started" || step.status === "ready") &&
+                  Boolean(step.consent?.is_active);
+                const canApprove = step.status === "in_progress";
+                const busy = pendingService === step.service_code;
+
+                return (
+                  <article className="setu-stage-card" key={step.service_code}>
+                    <div className="setu-stage-number">{String(index + 1).padStart(2, "0")}</div>
+
+                    <div className="setu-stage-body">
+                      <div className="setu-stage-heading">
+                        <div>
+                          <h3>{step.display_name}</h3>
+                          <p>{step.department}</p>
+                        </div>
+                        <span className={`setu-status ${STATUS_CLASSES[step.status]}`}>
+                          {t(STATUS_LABEL_KEY[step.status])}
+                        </span>
+                      </div>
+
+                      <div className="setu-stage-meta">
+                        {step.external_reference && (
+                          <span>Reference: <strong>{step.external_reference}</strong></span>
+                        )}
+                        {step.sla_due_at && (
+                          <span>Due: <strong>{new Date(step.sla_due_at).toLocaleDateString()}</strong></span>
+                        )}
+                        {step.sla_status && (
+                          <span className={`setu-sla-${step.sla_status}`}>
+                            SLA: <strong>{step.sla_status.replaceAll("_", " ")}</strong>
+                          </span>
+                        )}
+                      </div>
+
+                      {step.blocked_reason && (
+                        <div className="setu-stage-notice warning">
+                          <strong>Action required</strong>
+                          <span>{step.blocked_reason}</span>
+                        </div>
+                      )}
+
+                      {step.requires_service_codes.length > 0 && (
+                        <div className="setu-stage-dependency">
+                          <span>Dependency</span>
+                          <strong>{step.requires_service_codes.join(", ")}</strong>
+                        </div>
+                      )}
+
+                      <div className="setu-consent-box">
+                        <div>
+                          <p className="setu-consent-label">DOCUMENT & DATA CONSENT</p>
+                          {step.consent ? (
+                            <p>
+                              Shared with <strong>{step.consent.recipient_department}</strong> for{" "}
+                              “{step.consent.purpose}”.
+                              {step.consent.is_active ? (
+                                <> Valid until <strong>{new Date(step.consent.expires_at).toLocaleDateString()}</strong>.</>
+                              ) : (
+                                <> Consent has been revoked.</>
+                              )}
+                            </p>
+                          ) : (
+                            <p>No consent has been granted for this department yet.</p>
+                          )}
+                        </div>
+                        <span className={step.consent?.is_active ? "consent-active" : "consent-inactive"}>
+                          {step.consent?.is_active ? "Active" : "Not active"}
+                        </span>
+                      </div>
+
+                      <div className="setu-stage-actions">
+                        <ActionButton
+                          label="Grant consent"
+                          disabled={!canGrant}
+                          pending={busy && pendingAction === "consent"}
+                          onClick={() =>
+                            runAction(step.service_code, "consent", () =>
+                              journeyApi.grantConsent(
+                                applicationId,
+                                step.service_code,
+                                `Process ${step.display_name}`,
+                                token ?? undefined,
+                              ),
+                            )
+                          }
+                        />
+                        <ActionButton
+                          label="Revoke consent"
+                          variant="secondary"
+                          disabled={!canRevoke}
+                          pending={busy && pendingAction === "revoke"}
+                          onClick={() =>
+                            runAction(step.service_code, "revoke", () =>
+                              journeyApi.revokeConsent(
+                                applicationId,
+                                step.service_code,
+                                token ?? undefined,
+                              ),
+                            )
+                          }
+                        />
+                        <ActionButton
+                          label={`Submit to ${step.department}`}
+                          disabled={!canSubmit}
+                          pending={busy && pendingAction === "submit"}
+                          onClick={() =>
+                            runAction(step.service_code, "submit", () =>
+                              journeyApi.submit(
+                                applicationId,
+                                step.service_code,
+                                {},
+                                token ?? undefined,
+                              ),
+                            )
+                          }
+                        />
+                        <ActionButton
+                          label="Approve"
+                          disabled={!canApprove}
+                          pending={busy && pendingAction === "approve"}
+                          onClick={() =>
+                            runAction(step.service_code, "approve", () =>
+                              journeyApi.approve(
+                                applicationId,
+                                step.service_code,
+                                token ?? undefined,
+                              ),
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+
+        <aside className="setu-journey-sidebar">
+          <section className="setu-section">
+            <p className="setu-eyebrow">CURRENT STATUS</p>
+            <h2 className="setu-sidebar-title">
+              {journey.current_blocker ? "Action required" : "Moving normally"}
+            </h2>
+            <p className="setu-sidebar-copy">
+              {journey.current_blocker ?? "No active blocker has been reported for this journey."}
+            </p>
+
+            <div className="setu-next-action">
+              <span>Next action</span>
+              <strong>{journey.next_action}</strong>
+            </div>
+          </section>
+
+          <section className="setu-section">
+            <div className="setu-section-heading">
+              <div>
+                <p className="setu-eyebrow">JOURNEY TIMELINE</p>
+                <h2>Activity</h2>
+              </div>
+            </div>
+
+            {journey.timeline.length === 0 ? (
+              <p className="setu-muted">No activity recorded yet.</p>
+            ) : (
+              <ol className="setu-timeline">
+                {journey.timeline.map((event, index) => (
+                  <li key={`${event}-${index}`}>
+                    <span className="setu-timeline-dot" />
+                    <div>
+                      <small>Step {index + 1}</small>
+                      <p>{event}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+
+          <section className="setu-section setu-help-card">
+            <p className="setu-eyebrow">NEED HELP?</p>
+            <h2>Something not right?</h2>
+            <p>Use the grievance channel if a service is delayed or you need assistance.</p>
+            <Link href="/services" className="setu-text-button">
+              Explore services →
+            </Link>
+          </section>
+        </aside>
+      </div>
     </main>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: number }) {
+  return (
+    <div>
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </div>
   );
 }
 
@@ -279,15 +404,13 @@ function ActionButton({
   pending?: boolean;
   variant?: "primary" | "secondary";
 }) {
-  const base =
-    "rounded-lg px-3 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-40";
-  const styles =
-    variant === "primary"
-      ? "bg-slate-900 text-white hover:bg-slate-700"
-      : "border border-slate-300 text-slate-700 hover:bg-slate-50";
   return (
-    <button className={`${base} ${styles}`} disabled={disabled || pending} onClick={onClick}>
-      {pending ? "…" : label}
+    <button
+      className={`setu-button ${variant === "primary" ? "setu-button-primary" : "setu-button-secondary"}`}
+      disabled={disabled || pending}
+      onClick={onClick}
+    >
+      {pending ? "Working…" : label}
     </button>
   );
 }

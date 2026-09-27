@@ -1,103 +1,64 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useLanguage } from "@/lib/LanguageProvider";
-import { useAuth } from "@/lib/useAuth";
+import { useState } from "react";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useLanguage } from "../lib/LanguageProvider";
 
-const LINKS = [
-  { href: "/", labelKey: "nav_home" as const },
-  { href: "/services", labelKey: "nav_services" as const },
-  { href: "/journeys", labelKey: "nav_journeys" as const },
-  { href: "/vault", labelKey: "nav_vault" as const },
-  { href: "/profile", labelKey: "nav_profile" as const },
-];
+const links = [
+  ["nav_services", "/services"],
+  ["nav_schemes", "/schemes"],
+  ["nav_journeys", "/journeys"],
+  ["nav_vault", "/vault"],
+  ["nav_maharashtra", "/maharashtra"],
+  ["nav_grievance", "/grievance"],
+] as const;
 
-export function NavBar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { language, setLanguage, t } = useLanguage();
-  const { isLoggedIn, citizenId, role, logout } = useAuth();
+export default function NavBar() {
+  const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link href="/" className="text-lg font-bold tracking-tight text-slate-900">
-          OneGov <span className="text-slate-400">/</span> SETU
-        </Link>
-        <nav className="flex flex-wrap items-center gap-1 text-sm">
-          {LINKS.map((link) => {
-            const active = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-md px-3 py-1.5 font-medium transition ${
-                  active ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                {t(link.labelKey)}
-              </Link>
-            );
-          })}
-          <Link
-            href="/demo"
-            className={`rounded-md border px-3 py-1.5 font-medium transition ${
-              pathname === "/demo"
-                ? "border-orange-400 bg-orange-50 text-orange-700"
-                : "border-orange-300 text-orange-600 hover:bg-orange-50"
-            }`}
-          >
-            {t("nav_demo")}
+    <header className="setu-final-header">
+      <div className="setu-utility-bar">
+        <div className="setu-final-container">
+          <span>Government Citizen Services</span>
+          <div className="setu-utility-links">
+            <LanguageSwitcher />
+            <span className="setu-utility-divider" />
+            <span>{t("nav_accessibility")}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="setu-main-header">
+        <div className="setu-final-container setu-header-inner">
+          <Link href="/" className="setu-brand" onClick={() => setOpen(false)}>
+            <span className="setu-brand-mark">S</span>
+            <span><strong>SETU</strong><small>Citizen Services Portal</small></span>
           </Link>
-          {role === "admin" && (
-            <Link
-              href="/admin"
-              className={`rounded-md px-3 py-1.5 font-medium transition ${
-                pathname === "/admin" ? "bg-slate-900 text-white" : "text-slate-500 hover:bg-slate-100"
-              }`}
-            >
-              {t("nav_admin")}
+
+          <button
+            className="setu-mobile-toggle"
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            aria-label="Toggle navigation"
+          >
+            <span /><span /><span />
+          </button>
+
+          <nav className={open ? "setu-final-nav open" : "setu-final-nav"} aria-label="Primary navigation">
+            {links.map(([key, href]) => (
+              <Link key={href} href={href} onClick={() => setOpen(false)}>{t(key)}</Link>
+            ))}
+            <Link className="setu-nav-assistant" href="/assistant" onClick={() => setOpen(false)}>
+              {t("nav_assistant")}
             </Link>
-          )}
-          {isLoggedIn ? (
-            <button
-              onClick={() => {
-                logout();
-                router.push("/");
-              }}
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-500 hover:bg-slate-100"
-              title={citizenId ?? undefined}
-            >
-              {t("nav_logout")}
-            </button>
-          ) : (
-            <Link
-              href="/login"
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100"
-            >
+            <Link className="setu-nav-login" href="/login" onClick={() => setOpen(false)}>
               {t("nav_login")}
             </Link>
-          )}
-          <div className="ml-2 flex items-center rounded-md border border-slate-200 text-xs">
-            <button
-              className={`rounded-l-md px-2 py-1 font-medium ${
-                language === "en" ? "bg-slate-900 text-white" : "text-slate-500"
-              }`}
-              onClick={() => setLanguage("en")}
-            >
-              EN
-            </button>
-            <button
-              className={`rounded-r-md px-2 py-1 font-medium ${
-                language === "mr" ? "bg-slate-900 text-white" : "text-slate-500"
-              }`}
-              onClick={() => setLanguage("mr")}
-            >
-              मर
-            </button>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </div>
     </header>
   );
