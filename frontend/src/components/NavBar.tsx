@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -14,7 +14,7 @@ const links = [
   ["nav_grievance", "/grievance"],
 ] as const;
 
-export default function NavBar() {
+export function NavBar() {
   const [open, setOpen] = useState(false);
   const { t } = useLanguage();
 
@@ -63,3 +63,6 @@ export default function NavBar() {
     </header>
   );
 }
+
+
+export default NavBar;

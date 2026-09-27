@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
+﻿const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
 
 export type ApplicationStepStatus =
   | "not_started"
@@ -231,7 +231,7 @@ function readStoredToken(): string | null {
 }
 
 interface RequestOptions extends RequestInit {
-  /** Overrides the globally-logged-in user's token for this one call —
+  /** Overrides the globally-logged-in user's token for this one call â€”
    * used by the judge-mode /demo panels, which silently authenticate as
    * a fixed demo identity without touching (or requiring) a real
    * logged-in citizen's session. */
@@ -374,6 +374,11 @@ export const journeyApi = {
     }),
 };
 
+// Compatibility exports for feature modules introduced in later SETU phases.
+export const apiRequest = request;
+export const api = { request };
+
 export const adminApi = {
   getMetrics: (token?: string) => request<AdminMetrics>("/admin/metrics", { token }),
 };
+
