@@ -43,113 +43,7 @@
   margin: 0;
 }
 
-/* 2. Primary Ask SETU Area */
-.assistant-composer {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  border-radius: var(--setu-radius, 8px);
-  padding: 6px 6px 6px 16px;
-  box-shadow: 0 4px 14px rgba(16, 42, 67, 0.07);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
-  align-items: center;
-}
-
-.assistant-composer:focus-within {
-  border-color: var(--setu-navy, #102a43);
-  box-shadow: 0 4px 18px rgba(16, 42, 67, 0.13);
-}
-
-.assistant-composer input {
-  flex: 1;
-  border: 0;
-  outline: 0;
-  padding: 8px 4px;
-  font-size: 0.98rem;
-  font-family: inherit;
-  background: transparent;
-  color: var(--setu-ink, #172235);
-}
-
-.assistant-composer input::placeholder {
-  color: #94a3b8;
-}
-
-.assistant-composer button {
-  border: 0;
-  background: var(--setu-navy, #102a43);
-  color: #ffffff;
-  border-radius: 6px;
-  padding: 11px 24px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 150ms ease, transform 150ms ease;
-}
-
-.assistant-composer button:hover:not(:disabled) {
-  background: var(--setu-blue, #163e63);
-}
-
-.assistant-composer button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* 3. Suggested Questions (Clean Quick-Action Grid/Chips) */
-.assistant-suggestions {
-  margin-bottom: 32px;
-}
-
-.assistant-suggestions-label {
-  display: block;
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 10px;
-}
-
-.assistant-prompts {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.assistant-prompts button {
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  border-radius: 6px;
-  padding: 8px 14px;
-  min-height: 38px;
-  color: #334155;
-  font-size: 0.84rem;
-  font-weight: 600;
-  line-height: 1.35;
-  cursor: pointer;
-  text-align: left;
-  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
-  user-select: none;
-}
-
-.assistant-prompts button:hover {
-  border-color: var(--setu-saffron, #c47b16);
-  color: var(--setu-navy, #102a43);
-  background: #fdfaf5;
-  box-shadow: 0 2px 8px rgba(196, 123, 22, 0.12);
-}
-
-.assistant-prompts button:focus-visible {
-  outline: 2px solid var(--setu-saffron, #c47b16);
-  outline-offset: 2px;
-}
-
-/* 4. Messages / Response Area */
+/* 2. Messages / Response Area (Above Input) */
 .assistant-messages {
   display: grid;
   gap: 14px;
@@ -247,6 +141,133 @@
   gap: 6px;
 }
 
+/* 3. Primary Input Area (Below Response) */
+.assistant-interaction-area {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.assistant-composer {
+  display: flex;
+  gap: 10px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--setu-radius, 8px);
+  padding: 6px 6px 6px 16px;
+  box-shadow: 0 4px 14px rgba(16, 42, 67, 0.07);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+  align-items: center;
+}
+
+.assistant-composer:focus-within {
+  border-color: var(--setu-navy, #102a43);
+  box-shadow: 0 4px 18px rgba(16, 42, 67, 0.13);
+}
+
+.assistant-composer input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  padding: 8px 4px;
+  font-size: 0.98rem;
+  font-family: inherit;
+  background: transparent;
+  color: var(--setu-ink, #172235);
+}
+
+.assistant-composer input::placeholder {
+  color: #94a3b8;
+}
+
+.assistant-composer button {
+  border: 0;
+  background: var(--setu-navy, #102a43);
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 11px 24px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.assistant-composer button:hover:not(:disabled) {
+  background: var(--setu-blue, #163e63);
+}
+
+.assistant-composer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 4. Suggested Questions (Rendered below input only after click/focus) */
+@keyframes setuSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.assistant-suggestions {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--setu-radius, 8px);
+  box-shadow: 0 4px 16px rgba(16, 42, 67, 0.06);
+  animation: setuSlideDown 180ms ease-out;
+}
+
+.assistant-suggestions-label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.assistant-prompts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.assistant-prompts button {
+  border: 1px solid #d1d5db;
+  background: #f8fafc;
+  border-radius: 6px;
+  padding: 8px 14px;
+  min-height: 38px;
+  color: #334155;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  user-select: none;
+}
+
+.assistant-prompts button:hover {
+  border-color: var(--setu-saffron, #c47b16);
+  color: var(--setu-navy, #102a43);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(196, 123, 22, 0.12);
+}
+
+.assistant-prompts button:focus-visible {
+  outline: 2px solid var(--setu-saffron, #c47b16);
+  outline-offset: 2px;
+}
+
 /* 5. Notice */
 .assistant-notice {
   margin-top: 20px;
@@ -274,6 +295,9 @@
   .assistant-composer button {
     width: 100%;
     padding: 11px;
+  }
+  .assistant-suggestions {
+    padding: 12px;
   }
   .assistant-prompts {
     display: flex;

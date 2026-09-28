@@ -166,7 +166,7 @@ export default function VaultPage() {
           <p className="setu-muted" style={{ margin: "0 0 24px", lineHeight: "1.6" }}>
             The SETU Document Vault securely stores verified certificates and documents for reuse across all Maharashtra government services.
           </p>
-          <Link href="/login" className="setu-btn setu-btn-primary">
+          <Link href="/login?redirect=/vault" className="setu-btn setu-btn-primary">
             Sign In with Citizen ID
           </Link>
         </div>

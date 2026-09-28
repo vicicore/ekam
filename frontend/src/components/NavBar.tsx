@@ -22,7 +22,21 @@ export function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const { t } = useLanguage();
-  const { citizenId, isLoggedIn, logout } = useAuth();
+  const { citizenId, role, name, isLoggedIn, logout } = useAuth();
+
+  const linksToRender = isLoggedIn
+    ? navLinks.filter((item) => item.href !== "/profile")
+    : navLinks;
+
+  const getInitials = () => {
+    if (role === "admin") return "A";
+    if (name) {
+      const parts = name.trim().split(" ");
+      if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    return citizenId ? citizenId.slice(0, 1).toUpperCase() : "C";
+  };
 
   return (
     <header className="setu-shell-header" role="banner">
@@ -41,7 +55,15 @@ export function NavBar() {
 
           <div className="setu-utility-right">
             <LanguageSwitcher />
-            <Link href="/accessibility" style={{ fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+            <Link
+              href="/accessibility"
+              style={{
+                fontSize: "0.75rem",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
               <span>{t("nav_accessibility")}</span>
             </Link>
             <span style={{ opacity: 0.5 }}>|</span>
@@ -81,8 +103,9 @@ export function NavBar() {
           className={`setu-nav-links ${mobileOpen ? "is-open" : ""}`}
           aria-label="Primary navigation"
         >
-          {navLinks.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          {linksToRender.map((item) => {
+            const isActive =
+              pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.href}
@@ -98,29 +121,24 @@ export function NavBar() {
 
           {/* Citizen Auth State Action */}
           {isLoggedIn ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginLeft: "6px" }}>
+            <div className="setu-nav-user-container">
               <Link
                 href="/profile"
-                className="setu-btn setu-btn-secondary"
-                style={{ minHeight: "36px", padding: "0 12px", fontSize: "0.75rem", textDecoration: "none" }}
+                className="setu-nav-user-pill"
                 onClick={() => setMobileOpen(false)}
+                title="Open My SETU Citizen Dashboard"
               >
-                <span
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    borderRadius: "50%",
-                    background: "var(--setu-blue)",
-                    color: "#fff",
-                    display: "inline-grid",
-                    placeItems: "center",
-                    fontWeight: 800,
-                    fontSize: "0.7rem",
-                  }}
-                >
-                  {citizenId ? citizenId.slice(0, 1).toUpperCase() : "C"}
+                <span className={`setu-nav-avatar ${role === "admin" ? "is-admin" : ""}`}>
+                  {getInitials()}
                 </span>
-                <span>{citizenId ? `${citizenId.slice(0, 10)}` : "Citizen"}</span>
+                <div className="setu-nav-user-details">
+                  <span className="setu-nav-user-name">
+                    {name || (role === "admin" ? "Admin Officer" : "Demo Citizen")}
+                  </span>
+                  <span className="setu-nav-user-tag">
+                    {role === "admin" ? "Administrator" : "Demo Citizen"}
+                  </span>
+                </div>
               </Link>
               <button
                 type="button"
@@ -128,8 +146,7 @@ export function NavBar() {
                   logout();
                   setMobileOpen(false);
                 }}
-                className="setu-btn-tertiary"
-                style={{ fontSize: "0.75rem", cursor: "pointer", background: "none", border: 0, padding: "4px 8px" }}
+                className="setu-nav-signout-btn"
                 aria-label="Sign out"
               >
                 Sign out

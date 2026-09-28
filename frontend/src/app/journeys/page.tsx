@@ -63,7 +63,7 @@ export default function JourneysPage() {
             SETU connects multiple departments, providing real-time status, document verification, and statutory SLA tracking in one place.
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/login" className="setu-btn setu-btn-primary">
+            <Link href="/login?redirect=/journeys" className="setu-btn setu-btn-primary">
               Log In to My SETU →
             </Link>
             <Link href="/services" className="setu-btn setu-btn-secondary">

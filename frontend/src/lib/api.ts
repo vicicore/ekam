@@ -1,4 +1,4 @@
-﻿const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
 
 export type ApplicationStepStatus =
   | "not_started"
@@ -272,6 +272,10 @@ export interface SessionView {
 export const authApi = {
   login: (identifier: string) =>
     request<SessionView>("/auth/session", { method: "POST", body: JSON.stringify({ identifier }) }),
+  logout: (token?: string) =>
+    request<void>("/auth/logout", { method: "POST", token }),
+  me: (token?: string) =>
+    request<{ citizen_id: string; role: string }>("/auth/me", { method: "GET", token }),
 };
 
 export const demoApi = {

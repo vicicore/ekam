@@ -75,7 +75,11 @@ export default function ProfilePage() {
       setDocuments(documentResult.value);
     }
 
-    const failed = results.find((result) => result.status === "rejected");
+    const failed = results.find(
+      (result) =>
+        result.status === "rejected" &&
+        !(result.reason instanceof ApiError && result.reason.status === 404),
+    );
     if (failed && failed.status === "rejected") {
       setError(
         failed.reason instanceof ApiError
@@ -177,7 +181,7 @@ export default function ProfilePage() {
           <p className="setu-muted" style={{ margin: "0 0 24px", lineHeight: "1.6" }}>
             View what needs your attention, track active service journeys, manage reusable documents, and keep your citizen profile current.
           </p>
-          <Link href="/login" className="setu-btn setu-btn-primary">
+          <Link href="/login?redirect=/profile" className="setu-btn setu-btn-primary">
             Sign In with Citizen ID
           </Link>
         </section>

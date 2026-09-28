@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { assistantApi } from "@/lib/assistantApi";
 import { useLanguage } from "@/lib/LanguageProvider";
@@ -17,6 +17,10 @@ export default function AssistantPage() {
   const { language, t } = useLanguage();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const interactionAreaRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -36,11 +40,28 @@ export default function AssistantPage() {
     [t],
   );
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        interactionAreaRef.current &&
+        !interactionAreaRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   async function send(e?: FormEvent) {
     e?.preventDefault();
     const message = input.trim();
     if (!message || loading) return;
 
+    setShowSuggestions(false);
     setMessages((m) => [...m, { role: "user", text: message }]);
     setInput("");
     setLoading(true);
@@ -76,30 +97,7 @@ export default function AssistantPage() {
           <p className="assistant-intro">{t("assistant_hero_desc")}</p>
         </header>
 
-        {/* 2. Ask SETU Area (Primary Interaction) */}
-        <form className="assistant-composer" onSubmit={send}>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={t("assistant_placeholder")}
-            aria-label="Ask SETU Assistant"
-          />
-          <button type="submit" disabled={loading || !input.trim()}>
-            {loading ? t("loading") : t("assistant_ask_btn")}
-          </button>
-        </form>
-
-        {/* 3. Suggested Questions (Clean Quick-Action Chips Below Input) */}
-        <div className="assistant-suggestions">
-          <span className="assistant-suggestions-label">{t("assistant_suggested_label")}:</span>
-          <div className="assistant-prompts">
-            {prompts.map((prompt) => (
-              <button key={prompt} type="button" onClick={() => setInput(prompt)}>{prompt}</button>
-            ))}
-          </div>
-        </div>
-
-        {/* 4. Existing Assistant Content / Response Area */}
+        {/* 2. Bot Response / Assistant Conversation Area (Above Input) */}
         <div className="assistant-messages" aria-live="polite">
           {messages.map((message, index) => (
             <div className={`assistant-message ${message.role}`} key={`${message.role}-${index}`}>
@@ -132,7 +130,52 @@ export default function AssistantPage() {
           {loading && <div className="assistant-typing">SETU is checking its knowledge base…</div>}
         </div>
 
-        {/* 5. Notice */}
+        {/* 3. Primary Input Area (Below Response) */}
+        <div
+          ref={interactionAreaRef}
+          className="assistant-interaction-area"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setShowSuggestions(false);
+          }}
+        >
+          <form className="assistant-composer" onSubmit={send}>
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onFocus={() => setShowSuggestions(true)}
+              onClick={() => setShowSuggestions(true)}
+              placeholder={t("assistant_placeholder")}
+              aria-label="Ask SETU Assistant"
+            />
+            <button type="submit" disabled={loading || !input.trim()}>
+              {loading ? t("loading") : t("assistant_ask_btn")}
+            </button>
+          </form>
+
+          {/* 4. Suggested Questions (Shown only after clicking / focusing input) */}
+          {showSuggestions && (
+            <div className="assistant-suggestions">
+              <span className="assistant-suggestions-label">{t("assistant_suggested_label")}:</span>
+              <div className="assistant-prompts">
+                {prompts.map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    onClick={() => {
+                      setInput(prompt);
+                      inputRef.current?.focus();
+                    }}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 5. Grounded Advisory Notice */}
         <div className="assistant-notice">
           SETU Assistant answers are grounded only in the configured SETU
           knowledge base. Always verify eligibility, official requirements and
