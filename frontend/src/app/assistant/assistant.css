@@ -1,28 +1,289 @@
-.assistant-page{min-height:100vh;background:#f5f7fa;color:#172033;padding-bottom:70px}
-.assistant-hero{background:#fff;border-bottom:1px solid #e4e8ee;padding:58px max(24px,7vw);display:flex;justify-content:space-between;gap:30px;align-items:end}
-.assistant-kicker{font-size:11px;letter-spacing:.16em;font-weight:800;color:#9b6a13}
-.assistant-hero h1{font-size:clamp(34px,5vw,58px);line-height:1.04;margin:10px 0}
-.assistant-hero p{max-width:700px;color:#667085;line-height:1.7}
-.assistant-language{display:grid;gap:7px;font-size:12px;font-weight:800;color:#475467}
-.assistant-language select{height:44px;min-width:150px;border:1px solid #d9dee7;border-radius:8px;padding:0 12px;background:#fff}
-.assistant-shell{max-width:1050px;margin:28px auto;padding:0 22px}
-.assistant-prompts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.assistant-prompts button{border:1px solid #d9dee7;background:#fff;border-radius:999px;padding:9px 13px;color:#344054;cursor:pointer}
-.assistant-messages{display:grid;gap:14px}
-.assistant-message{max-width:82%;border:1px solid #e4e8ee;border-radius:12px;padding:17px 18px;background:#fff}
-.assistant-message.user{margin-left:auto;background:#183b67;color:#fff;border-color:#183b67}
-.assistant-message__role{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.72;margin-bottom:7px}
-.assistant-message__text{line-height:1.65}
-.assistant-sources{margin-top:14px;padding-top:12px;border-top:1px solid #e9edf2;display:grid;gap:6px;font-size:12px}
-.assistant-message.user .assistant-sources{border-color:rgba(255,255,255,.2)}
-.assistant-sources a,.assistant-actions a{color:inherit;font-weight:800;text-decoration:none}
-.assistant-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-.assistant-actions a{border:1px solid #d9dee7;padding:8px 10px;border-radius:7px;font-size:12px}
-.assistant-message.user .assistant-actions a{border-color:rgba(255,255,255,.3)}
-.assistant-typing{color:#667085;font-size:13px;padding:10px}
-.assistant-composer{display:flex;gap:10px;margin-top:18px;background:#fff;border:1px solid #dfe4ea;padding:10px;border-radius:12px}
-.assistant-composer input{flex:1;border:0;outline:0;padding:12px;font:inherit}
-.assistant-composer button{border:0;background:#183b67;color:#fff;border-radius:8px;padding:0 18px;font-weight:800;cursor:pointer}
-.assistant-composer button:disabled{opacity:.5;cursor:not-allowed}
-.assistant-notice{margin-top:12px;color:#667085;font-size:11px;line-height:1.6}
-@media(max-width:700px){.assistant-hero{padding:42px 20px;display:grid}.assistant-message{max-width:94%}.assistant-composer{align-items:stretch}.assistant-composer input{min-width:0}.assistant-composer button{padding:0 12px}}
+.assistant-page {
+  min-height: 100vh;
+  background: var(--setu-bg, #f5f7fa);
+  color: #172033;
+  padding-bottom: 70px;
+}
+
+.assistant-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 20px 60px;
+}
+
+/* 1. Header / Introduction */
+.assistant-header {
+  margin-bottom: 24px;
+}
+
+.assistant-kicker {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--setu-saffron, #c47b16);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.assistant-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.3rem);
+  font-weight: 800;
+  color: var(--setu-navy, #102a43);
+  margin: 0 0 8px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.assistant-intro {
+  max-width: 720px;
+  color: var(--setu-muted, #5d6d7d);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 2. Primary Ask SETU Area */
+.assistant-composer {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--setu-radius, 8px);
+  padding: 6px 6px 6px 16px;
+  box-shadow: 0 4px 14px rgba(16, 42, 67, 0.07);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+  align-items: center;
+}
+
+.assistant-composer:focus-within {
+  border-color: var(--setu-navy, #102a43);
+  box-shadow: 0 4px 18px rgba(16, 42, 67, 0.13);
+}
+
+.assistant-composer input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  padding: 8px 4px;
+  font-size: 0.98rem;
+  font-family: inherit;
+  background: transparent;
+  color: var(--setu-ink, #172235);
+}
+
+.assistant-composer input::placeholder {
+  color: #94a3b8;
+}
+
+.assistant-composer button {
+  border: 0;
+  background: var(--setu-navy, #102a43);
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 11px 24px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.assistant-composer button:hover:not(:disabled) {
+  background: var(--setu-blue, #163e63);
+}
+
+.assistant-composer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 3. Suggested Questions (Clean Quick-Action Grid/Chips) */
+.assistant-suggestions {
+  margin-bottom: 32px;
+}
+
+.assistant-suggestions-label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.assistant-prompts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.assistant-prompts button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 8px 14px;
+  min-height: 38px;
+  color: #334155;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  user-select: none;
+}
+
+.assistant-prompts button:hover {
+  border-color: var(--setu-saffron, #c47b16);
+  color: var(--setu-navy, #102a43);
+  background: #fdfaf5;
+  box-shadow: 0 2px 8px rgba(196, 123, 22, 0.12);
+}
+
+.assistant-prompts button:focus-visible {
+  outline: 2px solid var(--setu-saffron, #c47b16);
+  outline-offset: 2px;
+}
+
+/* 4. Messages / Response Area */
+.assistant-messages {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.assistant-message {
+  max-width: 86%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(16, 42, 67, 0.04);
+}
+
+.assistant-message.user {
+  margin-left: auto;
+  background: var(--setu-navy, #102a43);
+  color: #ffffff;
+  border-color: var(--setu-navy, #102a43);
+  box-shadow: 0 2px 8px rgba(16, 42, 67, 0.18);
+}
+
+.assistant-message__role {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--setu-saffron, #c47b16);
+  margin-bottom: 6px;
+}
+
+.assistant-message.user .assistant-message__role {
+  color: #f2c36d;
+  opacity: 0.9;
+}
+
+.assistant-message__text {
+  line-height: 1.65;
+  font-size: 0.92rem;
+}
+
+.assistant-sources {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e9edf2;
+  display: grid;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.assistant-message.user .assistant-sources {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.assistant-sources a,
+.assistant-actions a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.assistant-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 13px;
+}
+
+.assistant-actions a {
+  border: 1px solid #d9dee7;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  background: #f8fafc;
+  transition: all 140ms ease;
+}
+
+.assistant-actions a:hover {
+  background: #ffffff;
+  border-color: var(--setu-saffron, #c47b16);
+}
+
+.assistant-message.user .assistant-actions a {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.assistant-typing {
+  color: #64748b;
+  font-size: 0.86rem;
+  padding: 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 5. Notice */
+.assistant-notice {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+/* Responsive behavior */
+@media (max-width: 680px) {
+  .assistant-shell {
+    padding: 24px 16px 48px;
+  }
+  .assistant-composer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+  }
+  .assistant-composer input {
+    padding: 10px 6px;
+    width: 100%;
+  }
+  .assistant-composer button {
+    width: 100%;
+    padding: 11px;
+  }
+  .assistant-prompts {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .assistant-prompts button {
+    width: 100%;
+  }
+  .assistant-message {
+    max-width: 98%;
+  }
+}

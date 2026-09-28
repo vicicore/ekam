@@ -5,11 +5,11 @@ async function request<T>(path:string, options:RequestInit={}) : Promise<T> {
   if(!res.ok) throw new Error(await res.text()||`Request failed (${res.status})`); return res.json();
 }
 export const integrationApi={
-  list:(applicationId:string)=>request<any[]>(`/integration/application/${applicationId}`),
-  dispatch:(applicationId:string,serviceCode:string,department:string)=>request<any>("/integration/dispatch",{method:"POST",body:JSON.stringify({application_id:applicationId,service_code:serviceCode,department})}),
-  refresh:(id:string)=>request<any>(`/integration/dispatch/${id}`),
+  list:(applicationId:string)=>request<Record<string, unknown>[]>(`/integration/application/${applicationId}`),
+  dispatch:(applicationId:string,serviceCode:string,department:string)=>request<Record<string, unknown>>("/integration/dispatch",{method:"POST",body:JSON.stringify({application_id:applicationId,service_code:serviceCode,department})}),
+  refresh:(id:string)=>request<Record<string, unknown>>(`/integration/dispatch/${id}`),
 };
 export const notificationApi={
-  list:()=>request<any[]>("/notifications/me"),
-  read:(id:string)=>request<any>(`/notifications/${id}/read`,{method:"POST"}),
+  list:()=>request<Record<string, unknown>[]>("/notifications/me"),
+  read:(id:string)=>request<Record<string, unknown>>(`/notifications/${id}/read`,{method:"POST"}),
 };

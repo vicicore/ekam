@@ -2,6 +2,7 @@
 import {useEffect,useState} from "react";
 import Link from "next/link";
 import {officerApi} from "@/lib/officerApi";
+import "./officer.css";
 
 export default function OfficerDashboard(){
  const [data,setData]=useState<any>(null); const [queue,setQueue]=useState<any[]>([]); const [error,setError]=useState("");

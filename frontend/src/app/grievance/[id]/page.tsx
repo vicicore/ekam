@@ -1,18 +1,54 @@
  "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-
-const stages = [
-  { title: "Grievance registered", date: "18 Sep 2026", state: "done", text: "Acknowledgement number generated and grievance received by SETU." },
-  { title: "Department review", date: "22 Sep 2026", state: "active", text: "The concerned workflow is reviewing the grievance and supporting details." },
-  { title: "Action / response", date: "Pending", state: "pending", text: "Department response will appear here once an action is recorded." },
-  { title: "Closure", date: "Pending", state: "pending", text: "Citizen can view the final response and closure details." },
-];
+import { Grievance, grievanceApi } from "@/lib/grievanceApi";
 
 export default function GrievanceDetailPage() {
   const params = useParams();
   const id = decodeURIComponent(String(params.id));
+  const [grievance, setGrievance] = useState<Grievance | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    grievanceApi.get(id)
+      .then(setGrievance)
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  const currentStatus = grievance ? grievance.status : "under_review";
+  const stages = [
+    {
+      title: "Grievance registered",
+      date: grievance ? new Date(grievance.created_at).toLocaleDateString() : "18 Sep 2026",
+      state: "done",
+      text: "Acknowledgement number generated and grievance received by SETU.",
+    },
+    {
+      title: "Department review",
+      date: grievance?.events?.find(e => e.status === "under_review")
+        ? new Date(grievance.events.find(e => e.status === "under_review")!.created_at).toLocaleDateString()
+        : "In progress",
+      state: currentStatus === "submitted" ? "pending" : (currentStatus === "under_review" ? "active" : "done"),
+      text: "The concerned workflow is reviewing the grievance and supporting details.",
+    },
+    {
+      title: "Action / response",
+      date: grievance?.events?.find(e => e.status === "resolved")
+        ? new Date(grievance.events.find(e => e.status === "resolved")!.created_at).toLocaleDateString()
+        : "Pending",
+      state: currentStatus === "resolved" ? "done" : "pending",
+      text: "Department response and redressal action recorded.",
+    },
+    {
+      title: "Closure",
+      date: currentStatus === "resolved" ? "Completed" : "Pending",
+      state: currentStatus === "resolved" ? "done" : "pending",
+      text: "Citizen can view the final response and closure details.",
+    },
+  ];
 
   return (
     <main className="setu-grievance-page">
@@ -20,18 +56,18 @@ export default function GrievanceDetailPage() {
         <div className="setu-container">
           <div className="setu-breadcrumb"><Link href="/grievance">Grievance</Link><span>/</span><span>Track</span></div>
           <div className="setu-section-kicker">GRIEVANCE TRACKING</div>
-          <h1>{id}</h1>
-          <p>View the current grievance status, workflow stage and recorded updates.</p>
+          <h1>{grievance?.acknowledgement_number || id}</h1>
+          <p>{grievance ? grievance.title : "View current grievance status, workflow stage and recorded updates."}</p>
         </div>
       </section>
 
       <section className="setu-container setu-grievance-detail-grid">
         <div>
           <div className="setu-detail-summary">
-            <span><b>Status</b><em>Under Review</em></span>
-            <span><b>Category</b>Certificates & Documents</span>
-            <span><b>Department</b>Revenue Department</span>
-            <span><b>Priority</b>High</span>
+            <span><b>Status</b><em>{grievance ? (grievance.status === "resolved" ? "Resolved" : grievance.status === "under_review" ? "Under Review" : "Submitted") : "Under Review"}</em></span>
+            <span><b>Category</b>{grievance?.category || "Certificates & Documents"}</span>
+            <span><b>Department</b>{grievance?.department || "Revenue Department"}</span>
+            <span><b>Priority</b>{grievance ? (grievance.priority === "high" ? "High" : "Normal") : "High"}</span>
           </div>
           <section className="setu-timeline-panel">
             <div className="setu-section-kicker">STATUS TIMELINE</div>

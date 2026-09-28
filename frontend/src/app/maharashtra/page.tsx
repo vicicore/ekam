@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import MaharashtraMap from "@/components/MaharashtraMap";
 
 const districts = [
   "Ahmednagar","Akola","Amravati","Aurangabad","Beed","Bhandara","Buldhana",
@@ -39,21 +40,43 @@ export default function MaharashtraPage() {
   );
 
   return (
-    <main className="setu-page">
-      <header className="setu-state-hero">
+    <main className="setu-container" style={{ padding: "40px 16px 80px 16px" }}>
+      <div className="setu-breadcrumb" style={{ marginBottom: "16px" }}>
+        <Link href="/" style={{ color: "var(--setu-blue)", textDecoration: "none" }}>Home</Link>
+        <span>/</span>
+        <span>Maharashtra Services</span>
+      </div>
+
+      <header className="setu-state-hero" style={{ marginBottom: "32px" }}>
         <div>
           <p className="setu-eyebrow">MAHARASHTRA GOVERNMENT SERVICES</p>
-          <h1>One state. One access point.</h1>
+          <h1>One State. One Access Point.</h1>
           <p>
-            Explore citizen services by district, department and service category.
-            SETU brings the state service layer into one consistent experience.
+            Explore citizen services across 36 districts, 6 administrative divisions and state-wide departments.
+            SETU brings Maharashtra's public service architecture into a single, cohesive citizen portal.
           </p>
+          <div style={{ marginTop: "16px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <Link href="/maharashtra/intelligence" className="setu-btn setu-btn-primary">
+              Open Maharashtra Intelligence Console →
+            </Link>
+            <Link href="/services" className="setu-btn setu-btn-secondary">
+              Browse All 14 Services
+            </Link>
+          </div>
         </div>
         <div className="setu-state-badge">
           <strong>MAHARASHTRA</strong>
-          <span>36 districts · 6 administrative divisions</span>
+          <span>36 districts · 6 divisions · 14 core services</span>
         </div>
       </header>
+
+      {/* Interactive Map Section */}
+      <section style={{ marginBottom: "48px" }}>
+        <MaharashtraMap onSelectDistrict={(dId: string) => {
+          const match = districts.find(d => d.toLowerCase() === dId.toLowerCase() || dId.toLowerCase().includes(d.toLowerCase()));
+          if (match) setSelected(match);
+        }} />
+      </section>
 
       <section className="setu-state-grid">
         <div className="setu-section">

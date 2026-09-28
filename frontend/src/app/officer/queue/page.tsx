@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 import {useCallback,useEffect,useState} from "react";
 import {officerApi} from "@/lib/officerApi";
 import Link from "next/link";
+import "../officer.css";
 export default function OfficerQueue(){
  const [rows,setRows]=useState<any[]>([]),[filter,setFilter]=useState(""),[selected,setSelected]=useState<any>(null),[note,setNote]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState("");
  const load=useCallback(() => officerApi.queue(filter||undefined).then(setRows).catch(e=>setError(e.message)),[filter]); useEffect(() => { void load(); },[load]);

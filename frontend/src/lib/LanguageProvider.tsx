@@ -18,6 +18,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = window.localStorage.getItem("setu-language") as Language | null;
     if (stored === "en" || stored === "hi" || stored === "mr") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLanguageState(stored);
     }
   }, []);

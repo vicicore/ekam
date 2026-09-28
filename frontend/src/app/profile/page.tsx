@@ -13,13 +13,12 @@ import {
 import {
   DOC_STATUS_CLASSES,
   DOC_STATUS_LABEL_KEY,
-  STATUS_CLASSES,
-  STATUS_LABEL_KEY,
 } from "@/lib/statusStyles";
 import { useAuth } from "@/lib/useAuth";
 import { useLanguage } from "@/lib/LanguageProvider";
+import { SCHEME_CATALOG } from "@/lib/schemeCatalog";
 
-type Tab = "overview" | "applications" | "documents" | "profile";
+type Tab = "overview" | "applications" | "documents" | "profile" | "schemes";
 
 export default function ProfilePage() {
   const { t } = useLanguage();
@@ -39,6 +38,7 @@ export default function ProfilePage() {
     district: "",
     taluka: "",
     phone: "",
+    preferred_language: "en",
   });
 
   const load = useCallback(async () => {
@@ -63,6 +63,7 @@ export default function ProfilePage() {
         district: p.district ?? "",
         taluka: p.taluka ?? "",
         phone: p.phone ?? "",
+        preferred_language: p.preferred_language ?? "en",
       });
     }
 
@@ -74,9 +75,7 @@ export default function ProfilePage() {
       setDocuments(documentResult.value);
     }
 
-    const failed = results.find(
-      (result) => result.status === "rejected",
-    );
+    const failed = results.find((result) => result.status === "rejected");
     if (failed && failed.status === "rejected") {
       setError(
         failed.reason instanceof ApiError
@@ -89,7 +88,6 @@ export default function ProfilePage() {
   }, [citizenId, token, t]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 
@@ -118,7 +116,7 @@ export default function ProfilePage() {
       if (!journey.is_complete) {
         items.push({
           title: journey.life_event_title_en,
-          detail: "Application is currently in progress.",
+          detail: "Active application in progress. Next action awaiting your review.",
           href: `/journeys/${journey.application_id}`,
         });
       }
@@ -130,14 +128,20 @@ export default function ProfilePage() {
           title: doc.doc_type.replaceAll("_", " "),
           detail:
             doc.status === "expired"
-              ? "Document has expired and may need to be replaced."
-              : "Document was rejected and may need to be re-uploaded.",
+              ? "Document has expired and may need to be updated."
+              : `Document rejected: ${doc.rejection_reason || "Please re-upload a clear copy."}`,
+          href: "/vault",
+        });
+      } else if (doc.status === "uploaded") {
+        items.push({
+          title: doc.doc_type.replaceAll("_", " "),
+          detail: "Document uploaded but not yet submitted for review.",
           href: "/vault",
         });
       }
     });
 
-    return items.slice(0, 5);
+    return items;
   }, [journeys, documents]);
 
   const saveProfile = async () => {
@@ -164,56 +168,81 @@ export default function ProfilePage() {
 
   if (!isLoggedIn || !citizenId) {
     return (
-      <main className="setu-page">
-        <section className="setu-login-panel">
-          <p className="setu-eyebrow">MY SETU</p>
-          <h1>Sign in to access your citizen dashboard</h1>
-          <p>
-            View your applications, documents, profile information and
-            pending actions in one place.
+      <div className="setu-page-shell" style={{ width: "min(var(--setu-max), calc(100% - 32px))", margin: "0 auto", padding: "48px 0" }}>
+        <section className="setu-panel" style={{ maxWidth: "580px", margin: "40px auto", textAlign: "center", padding: "40px 24px" }}>
+          <span className="setu-ink-kicker">CITIZEN ACTION CENTER</span>
+          <h1 style={{ fontSize: "1.8rem", color: "var(--setu-navy)", margin: "8px 0 12px" }}>
+            Sign in to access My SETU
+          </h1>
+          <p className="setu-muted" style={{ margin: "0 0 24px", lineHeight: "1.6" }}>
+            View what needs your attention, track active service journeys, manage reusable documents, and keep your citizen profile current.
           </p>
-          <Link href="/login" className="setu-button setu-button-primary">
-            Log in to SETU
+          <Link href="/login" className="setu-btn setu-btn-primary">
+            Sign In with Citizen ID
           </Link>
         </section>
-      </main>
+      </div>
     );
   }
 
+  const completeness = profile?.profile_completeness_pct ?? 75;
+
   return (
-    <main className="setu-page">
-      <div className="setu-dashboard-header">
+    <div className="setu-page-shell" style={{ width: "min(var(--setu-max), calc(100% - 32px))", margin: "0 auto", padding: "36px 0 60px" }}>
+      {/* Header */}
+      <header className="setu-dashboard-header" style={{ marginBottom: "24px" }}>
         <div>
-          <p className="setu-eyebrow">MY SETU</p>
-          <h1>Citizen Dashboard</h1>
-          <p>
-            Manage your government-service activity, documents and profile
-            from one place.
+          <span className="setu-ink-kicker">MAHARASHTRA CITIZEN ACTION CENTER</span>
+          <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", color: "var(--setu-navy)", margin: "4px 0 6px" }}>
+            {t("qa_dashboard_title")}
+          </h1>
+          <p className="setu-muted" style={{ margin: 0, fontSize: "0.95rem" }}>
+            {t("profile_subheading")}
           </p>
         </div>
-        <div className="setu-citizen-chip">
-          <span className="setu-citizen-avatar">
+
+        <div className="setu-citizen-chip" style={{ background: "#fff", border: "1px solid var(--setu-line)", padding: "10px 16px", borderRadius: "var(--setu-radius)", display: "flex", alignItems: "center", gap: "12px" }}>
+          <div
+            style={{
+              width: "42px",
+              height: "42px",
+              borderRadius: "50%",
+              background: "var(--setu-navy)",
+              color: "#fff",
+              display: "grid",
+              placeItems: "center",
+              fontWeight: 800,
+              fontSize: "1.1rem",
+              border: "2px solid #e4a23b",
+            }}
+          >
             {(profile?.full_name || citizenId).charAt(0).toUpperCase()}
-          </span>
-          <span>
-            <strong>{profile?.full_name || "Citizen"}</strong>
-            <small>{citizenId}</small>
-          </span>
+          </div>
+          <div>
+            <strong style={{ display: "block", color: "var(--setu-navy)", fontSize: "0.95rem" }}>
+              {profile?.full_name || "Citizen"}
+            </strong>
+            <small style={{ color: "var(--setu-muted)", fontSize: "0.75rem" }}>
+              ID: {citizenId} {profile?.district && `· ${profile.district}`}
+            </small>
+          </div>
         </div>
-      </div>
+      </header>
 
       {error && (
-        <div className="setu-alert setu-alert-error" role="alert">
+        <div className="setu-alert setu-alert-error" role="alert" style={{ marginBottom: "20px" }}>
           {error}
         </div>
       )}
 
-      <div className="setu-tabbar" role="tablist" aria-label="My SETU sections">
+      {/* Tabs */}
+      <div className="setu-filter-chips" role="tablist" aria-label="My SETU sections" style={{ marginBottom: "24px" }}>
         {[
-          ["overview", "Overview"],
-          ["applications", "Applications"],
-          ["documents", "Documents"],
-          ["profile", "Profile"],
+          ["overview", t("profile_tab_overview")],
+          ["applications", `${t("profile_tab_applications")} (${journeys?.length ?? 0})`],
+          ["documents", `${t("profile_tab_documents")} (${documents?.length ?? 0})`],
+          ["schemes", t("profile_tab_schemes")],
+          ["profile", t("profile_tab_info")],
         ].map(([value, label]) => (
           <button
             key={value}
@@ -228,17 +257,21 @@ export default function ProfilePage() {
       </div>
 
       {loading ? (
-        <DashboardSkeleton />
+        <div className="setu-panel" style={{ padding: "40px", textAlign: "center" }}>
+          {t("loading")}
+        </div>
       ) : (
         <>
           {tab === "overview" && (
             <Overview
+              completeness={completeness}
               stats={stats}
               attentionItems={attentionItems}
               journeys={journeys ?? []}
               documents={documents ?? []}
               onApplications={() => setTab("applications")}
               onDocuments={() => setTab("documents")}
+              onCompleteProfile={() => setTab("profile")}
             />
           )}
 
@@ -250,77 +283,96 @@ export default function ProfilePage() {
             <Documents documents={documents ?? []} />
           )}
 
+          {tab === "schemes" && (
+            <SchemesPreview />
+          )}
+
           {tab === "profile" && (
-            <section className="setu-section">
-              <div className="setu-section-heading">
+            <section className="setu-panel" aria-labelledby="profile-heading">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                 <div>
-                  <p className="setu-eyebrow">PERSONAL INFORMATION</p>
-                  <h2>Your citizen profile</h2>
+                  <span className="setu-ink-kicker">PERSONAL CREDENTIALS</span>
+                  <h2 id="profile-heading" style={{ margin: "4px 0", fontSize: "1.25rem", color: "var(--setu-navy)" }}>
+                    Citizen Profile Information
+                  </h2>
+                  <p className="setu-muted" style={{ margin: 0, fontSize: "0.82rem" }}>
+                    Information entered here is reused across eligible services without re-entry.
+                  </p>
                 </div>
-                {profile && (
-                  <span className="setu-completeness">
-                    {profile.profile_completeness_pct}% complete
+                <span className="setu-status setu-status-verified">
+                  {completeness}% Complete
+                </span>
+              </div>
+
+              <div className="setu-form-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px" }}>
+                <label className="setu-field">
+                  <span>Full Legal Name:</span>
+                  <input
+                    value={form.full_name}
+                    onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                    placeholder="As appearing on official identity records"
+                  />
+                </label>
+                <label className="setu-field">
+                  <span>Registered Mobile / Phone:</span>
+                  <input
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    placeholder="e.g. 9876543210"
+                  />
+                </label>
+                <label className="setu-field">
+                  <span>District (Maharashtra):</span>
+                  <input
+                    value={form.district}
+                    onChange={(e) => setForm({ ...form, district: e.target.value })}
+                    placeholder="e.g. Pune, Nashik, Nagpur"
+                  />
+                </label>
+                <label className="setu-field">
+                  <span>Taluka / Sub-Division:</span>
+                  <input
+                    value={form.taluka}
+                    onChange={(e) => setForm({ ...form, taluka: e.target.value })}
+                    placeholder="e.g. Haveli, Baramati"
+                  />
+                </label>
+              </div>
+
+              <div style={{ marginTop: "24px", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "14px" }}>
+                {saved && (
+                  <span style={{ color: "var(--setu-green)", fontSize: "0.85rem", fontWeight: 700 }}>
+                    ✓ Profile saved successfully
                   </span>
                 )}
-              </div>
-
-              <div className="setu-form-grid">
-                <Field
-                  label="Full name"
-                  value={form.full_name}
-                  onChange={(value) =>
-                    setForm((current) => ({ ...current, full_name: value }))
-                  }
-                />
-                <Field
-                  label="Phone"
-                  value={form.phone}
-                  onChange={(value) =>
-                    setForm((current) => ({ ...current, phone: value }))
-                  }
-                />
-                <Field
-                  label="District"
-                  value={form.district}
-                  onChange={(value) =>
-                    setForm((current) => ({ ...current, district: value }))
-                  }
-                />
-                <Field
-                  label="Taluka"
-                  value={form.taluka}
-                  onChange={(value) =>
-                    setForm((current) => ({ ...current, taluka: value }))
-                  }
-                />
-              </div>
-
-              <div className="setu-form-actions">
-                {saved && <span className="setu-save-message">Profile saved.</span>}
                 <button
-                  className="setu-button setu-button-primary"
+                  type="button"
+                  className="setu-btn setu-btn-primary"
                   onClick={saveProfile}
                   disabled={saving}
                 >
-                  {saving ? "Saving…" : "Save changes"}
+                  {saving ? t("loading") : t("profile_save_btn")}
                 </button>
               </div>
             </section>
           )}
         </>
       )}
-    </main>
+    </div>
   );
 }
 
 function Overview({
+  completeness,
   stats,
   attentionItems,
   journeys,
   documents,
   onApplications,
   onDocuments,
+  onCompleteProfile,
 }: {
+  completeness: number;
   stats: {
     activeApplications: number;
     completedApplications: number;
@@ -334,257 +386,307 @@ function Overview({
   documents: DocumentView[];
   onApplications: () => void;
   onDocuments: () => void;
+  onCompleteProfile: () => void;
 }) {
   return (
-    <>
-      <section className="setu-stat-grid">
-        <StatCard
-          label="Active applications"
-          value={stats.activeApplications}
-          detail="Currently in progress"
-          accent="blue"
-          onClick={onApplications}
-        />
-        <StatCard
-          label="Completed services"
-          value={stats.completedApplications}
-          detail="Successfully completed"
-          accent="green"
-          onClick={onApplications}
-        />
-        <StatCard
-          label="Documents"
-          value={stats.totalDocuments}
-          detail={`${stats.verifiedDocuments} verified`}
-          accent="orange"
-          onClick={onDocuments}
-        />
-        <StatCard
-          label="Pending actions"
-          value={attentionItems.length}
-          detail={`${stats.pendingDocuments} documents awaiting review`}
-          accent="red"
-          onClick={onDocuments}
-        />
-      </section>
-
-      <div className="setu-content-grid">
-        <section className="setu-section">
-          <div className="setu-section-heading">
-            <div>
-              <p className="setu-eyebrow">ATTENTION REQUIRED</p>
-              <h2>Needs your attention</h2>
-            </div>
-          </div>
-
-          {attentionItems.length === 0 ? (
-            <EmptyState
-              title="Nothing needs your attention"
-              detail="There are no pending actions or document issues right now."
-            />
-          ) : (
-            <div className="setu-attention-list">
-              {attentionItems.map((item, index) => (
-                <Link key={`${item.href}-${index}`} href={item.href} className="setu-attention-item">
-                  <span className="setu-attention-icon">!</span>
-                  <span>
-                    <strong>{item.title}</strong>
-                    <small>{item.detail}</small>
-                  </span>
-                  <span className="setu-arrow">→</span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="setu-section">
-          <div className="setu-section-heading">
-            <div>
-              <p className="setu-eyebrow">QUICK ACCESS</p>
-              <h2>Common actions</h2>
-            </div>
-          </div>
-
-          <div className="setu-quick-grid">
-            <Link href="/services" className="setu-quick-card">
-              <span>01</span>
-              <strong>Discover a service</strong>
-              <small>Find a government service by life event.</small>
-            </Link>
-            <Link href="/vault" className="setu-quick-card">
-              <span>02</span>
-              <strong>Manage documents</strong>
-              <small>Review, upload and track your documents.</small>
-            </Link>
-            <Link href="/journeys" className="setu-quick-card">
-              <span>03</span>
-              <strong>Track applications</strong>
-              <small>Follow your active service journeys.</small>
-            </Link>
-            <Link href="/profile" className="setu-quick-card">
-              <span>04</span>
-              <strong>Update profile</strong>
-              <small>Keep your citizen information current.</small>
-            </Link>
-          </div>
-        </section>
-      </div>
-
-      <section className="setu-section">
-        <div className="setu-section-heading">
+    <div style={{ display: "grid", gap: "24px" }}>
+      {/* 1. PRIMARY SECTION: WHAT NEEDS YOUR ATTENTION? */}
+      <section className="setu-panel" style={{ borderLeft: "4px solid var(--setu-saffron)" }} aria-labelledby="attention-heading">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
           <div>
-            <p className="setu-eyebrow">RECENT ACTIVITY</p>
-            <h2>Your applications</h2>
+            <span className="setu-ink-kicker">HIGH PRIORITY</span>
+            <h2 id="attention-heading" style={{ margin: "2px 0", fontSize: "1.3rem", color: "var(--setu-navy)" }}>
+              What Needs Your Attention?
+            </h2>
           </div>
-          <button className="setu-text-button" onClick={onApplications}>
-            View all →
-          </button>
+          <span className="setu-status setu-status-action">
+            {attentionItems.length} Pending Actions
+          </span>
         </div>
 
-        {journeys.length === 0 ? (
-          <EmptyState
-            title="No applications yet"
-            detail="Start a service journey and it will appear here."
-            action={
-              <Link href="/services" className="setu-button setu-button-secondary">
-                Discover services
-              </Link>
-            }
-          />
+        {attentionItems.length === 0 ? (
+          <div style={{ padding: "20px", background: "#f0fdf4", borderRadius: "var(--setu-radius)", color: "#166534", fontSize: "0.88rem" }}>
+            ✓ <strong>All caught up!</strong> No active blockers, pending document actions, or SLA warnings for your profile.
+          </div>
         ) : (
-          <div className="setu-table-wrap">
-            <table className="setu-table">
-              <thead>
-                <tr>
-                  <th>Service journey</th>
-                  <th>Started</th>
-                  <th>Status</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {journeys.slice(0, 5).map((journey) => (
-                  <tr key={journey.application_id}>
-                    <td>
-                      <strong>{journey.life_event_title_en}</strong>
-                      <small>{journey.application_id}</small>
-                    </td>
-                    <td>{new Date(journey.created_at).toLocaleDateString()}</td>
-                    <td>
-                      <span
-                        className={`setu-status ${
-                          journey.is_complete
-                            ? "setu-status-success"
-                            : "setu-status-progress"
-                        }`}
-                      >
-                        {journey.is_complete ? "Complete" : "In progress"}
-                      </span>
-                    </td>
-                    <td>
-                      <Link
-                        className="setu-text-button"
-                        href={`/journeys/${journey.application_id}`}
-                      >
-                        Open →
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-
-      <section className="setu-section">
-        <div className="setu-section-heading">
-          <div>
-            <p className="setu-eyebrow">DOCUMENT VAULT</p>
-            <h2>Document status</h2>
-          </div>
-          <button className="setu-text-button" onClick={onDocuments}>
-            Manage documents →
-          </button>
-        </div>
-
-        <div className="setu-document-summary">
-          <DocumentMetric label="Verified" value={stats.verifiedDocuments} />
-          <DocumentMetric label="Under review" value={stats.pendingDocuments} />
-          <DocumentMetric label="Needs attention" value={stats.attentionDocuments} />
-        </div>
-
-        {documents.length > 0 && (
-          <div className="setu-document-list">
-            {documents.slice(0, 4).map((doc) => (
-              <Link href="/vault" key={doc.id} className="setu-document-row">
-                <span>
-                  <strong>{doc.doc_type.replaceAll("_", " ")}</strong>
-                  <small>{doc.original_filename}</small>
-                </span>
-                <span
-                  className={`setu-status ${DOC_STATUS_CLASSES[doc.status]}`}
-                >
-                  {doc.status.replaceAll("_", " ")}
+          <div style={{ display: "grid", gap: "10px" }}>
+            {attentionItems.map((item, idx) => (
+              <Link
+                key={idx}
+                href={item.href}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "14px 16px",
+                  background: "#fff9f0",
+                  border: "1px solid #f9d8a6",
+                  borderRadius: "var(--setu-radius)",
+                  textDecoration: "none",
+                  color: "inherit",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#fef3c7", color: "#b45309", display: "grid", placeItems: "center", fontWeight: 900 }}>
+                    !
+                  </span>
+                  <div>
+                    <strong style={{ fontSize: "0.92rem", color: "var(--setu-navy)" }}>{item.title}</strong>
+                    <p style={{ margin: "2px 0 0", fontSize: "0.78rem", color: "var(--setu-muted)" }}>
+                      {item.detail}
+                    </p>
+                  </div>
+                </div>
+                <span style={{ color: "var(--setu-blue)", fontWeight: 800, fontSize: "0.85rem" }}>
+                  Action Required →
                 </span>
               </Link>
             ))}
           </div>
         )}
       </section>
-    </>
+
+      {/* 2. PROFILE COMPLETENESS BREAKDOWN CARD */}
+      <section className="setu-panel" aria-labelledby="completeness-heading">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px", flexWrap: "wrap", gap: "10px" }}>
+          <div>
+            <span className="setu-ink-kicker">PROFILE READINESS</span>
+            <h2 id="completeness-heading" style={{ margin: "2px 0", fontSize: "1.2rem", color: "var(--setu-navy)" }}>
+              Profile Completion: {completeness}%
+            </h2>
+          </div>
+          <button type="button" onClick={onCompleteProfile} className="setu-btn setu-btn-secondary" style={{ fontSize: "0.78rem" }}>
+            Complete Profile Details
+          </button>
+        </div>
+
+        <div style={{ width: "100%", height: "8px", background: "#e2e8f0", borderRadius: "999px", overflow: "hidden", marginBottom: "16px" }}>
+          <div style={{ width: `${completeness}%`, height: "100%", background: "var(--setu-blue)", transition: "width 300ms ease" }} />
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "12px" }}>
+          <div style={{ padding: "10px 12px", background: "#f8fafc", border: "1px solid var(--setu-line)", borderRadius: "var(--setu-radius)", fontSize: "0.8rem" }}>
+            <span style={{ color: "var(--setu-green)", fontWeight: 800, marginRight: "6px" }}>✓</span>
+            <strong>Personal Details:</strong> Verified
+          </div>
+          <div style={{ padding: "10px 12px", background: "#f8fafc", border: "1px solid var(--setu-line)", borderRadius: "var(--setu-radius)", fontSize: "0.8rem" }}>
+            <span style={{ color: "var(--setu-green)", fontWeight: 800, marginRight: "6px" }}>✓</span>
+            <strong>Address & Location:</strong> Maharashtra Resident
+          </div>
+          <div style={{ padding: "10px 12px", background: "#f8fafc", border: "1px solid var(--setu-line)", borderRadius: "var(--setu-radius)", fontSize: "0.8rem" }}>
+            <span style={{ color: stats.verifiedDocuments > 0 ? "var(--setu-green)" : "var(--setu-saffron)", fontWeight: 800, marginRight: "6px" }}>
+              {stats.verifiedDocuments > 0 ? "✓" : "○"}
+            </span>
+            <strong>Document Vault:</strong> {stats.verifiedDocuments} Verified Document(s)
+          </div>
+          <div style={{ padding: "10px 12px", background: "#f8fafc", border: "1px solid var(--setu-line)", borderRadius: "var(--setu-radius)", fontSize: "0.8rem" }}>
+            <span style={{ color: "var(--setu-green)", fontWeight: 800, marginRight: "6px" }}>✓</span>
+            <strong>Consent Preferences:</strong> Explicit Permission Active
+          </div>
+        </div>
+      </section>
+
+      {/* 3. KEY CITIZEN METRICS */}
+      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px" }}>
+        <button type="button" onClick={onApplications} className="setu-panel" style={{ textAlign: "left", cursor: "pointer", borderTop: "3px solid var(--setu-blue)" }}>
+          <span className="setu-muted" style={{ fontSize: "0.76rem" }}>ACTIVE JOURNEYS</span>
+          <strong style={{ display: "block", fontSize: "1.8rem", color: "var(--setu-navy)", marginTop: "4px" }}>
+            {stats.activeApplications}
+          </strong>
+          <small className="setu-muted">In progress with departments</small>
+        </button>
+
+        <button type="button" onClick={onApplications} className="setu-panel" style={{ textAlign: "left", cursor: "pointer", borderTop: "3px solid var(--setu-green)" }}>
+          <span className="setu-muted" style={{ fontSize: "0.76rem" }}>COMPLETED SERVICES</span>
+          <strong style={{ display: "block", fontSize: "1.8rem", color: "var(--setu-green)", marginTop: "4px" }}>
+            {stats.completedApplications}
+          </strong>
+          <small className="setu-muted">Delivered & deposited in vault</small>
+        </button>
+
+        <button type="button" onClick={onDocuments} className="setu-panel" style={{ textAlign: "left", cursor: "pointer", borderTop: "3px solid var(--setu-saffron)" }}>
+          <span className="setu-muted" style={{ fontSize: "0.76rem" }}>STORED DOCUMENTS</span>
+          <strong style={{ display: "block", fontSize: "1.8rem", color: "var(--setu-navy)", marginTop: "4px" }}>
+            {stats.totalDocuments}
+          </strong>
+          <small className="setu-muted">{stats.verifiedDocuments} verified for reuse</small>
+        </button>
+      </section>
+
+      {/* 4. ACTIVE JOURNEYS & RECENT APPLICATIONS */}
+      <section className="setu-panel" aria-labelledby="recent-heading">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+          <div>
+            <span className="setu-ink-kicker">WORKFLOW TRACKER</span>
+            <h2 id="recent-heading" style={{ margin: "2px 0", fontSize: "1.2rem", color: "var(--setu-navy)" }}>
+              Active Journeys & Recent Applications
+            </h2>
+          </div>
+          <Link href="/services" className="setu-btn setu-btn-primary" style={{ fontSize: "0.78rem" }}>
+            Start New Service
+          </Link>
+        </div>
+
+        {journeys.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "32px 16px", background: "#f8fafc", borderRadius: "var(--setu-radius)" }}>
+            <p className="setu-muted" style={{ margin: "0 0 12px" }}>
+              No active applications yet. Start a goal journey to begin.
+            </p>
+            <Link href="/services" className="setu-btn setu-btn-secondary" style={{ fontSize: "0.8rem" }}>
+              Discover Services
+            </Link>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gap: "10px" }}>
+            {journeys.slice(0, 5).map((journey) => (
+              <Link
+                key={journey.application_id}
+                href={`/journeys/${journey.application_id}`}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "14px 18px",
+                  background: "#ffffff",
+                  border: "1px solid var(--setu-line)",
+                  borderRadius: "var(--setu-radius)",
+                  textDecoration: "none",
+                  color: "inherit",
+                }}
+              >
+                <div>
+                  <strong style={{ fontSize: "0.95rem", color: "var(--setu-navy)", display: "block" }}>
+                    {journey.life_event_title_en}
+                  </strong>
+                  <small style={{ color: "var(--setu-muted)", fontSize: "0.74rem" }}>
+                    Application ID: {journey.application_id} · Started {new Date(journey.created_at).toLocaleDateString()}
+                  </small>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span className={`setu-status ${journey.is_complete ? "setu-status-verified" : "setu-status-progress"}`}>
+                    {journey.is_complete ? "Completed" : "In Progress"}
+                  </span>
+                  <span style={{ color: "var(--setu-blue)", fontWeight: 800 }}>→</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* 5. DOCUMENT VAULT PREVIEW */}
+      <section className="setu-panel" aria-labelledby="vault-preview-heading">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+          <div>
+            <span className="setu-ink-kicker">REUSABLE ASSETS</span>
+            <h2 id="vault-preview-heading" style={{ margin: "2px 0", fontSize: "1.2rem", color: "var(--setu-navy)" }}>
+              Document Vault Summary
+            </h2>
+          </div>
+          <Link href="/vault" className="setu-btn setu-btn-secondary" style={{ fontSize: "0.78rem" }}>
+            Manage All Documents ({stats.totalDocuments}) →
+          </Link>
+        </div>
+
+        {documents.length === 0 ? (
+          <p className="setu-muted" style={{ margin: 0, fontSize: "0.85rem" }}>
+            No documents stored yet. Upload a document to reuse it across multiple services.
+          </p>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "10px" }}>
+            {documents.slice(0, 4).map((doc) => (
+              <div
+                key={doc.id}
+                style={{
+                  padding: "12px 14px",
+                  background: "#f8fafc",
+                  border: "1px solid var(--setu-line)",
+                  borderRadius: "var(--setu-radius)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  <strong style={{ fontSize: "0.88rem", color: "var(--setu-navy)", display: "block", textTransform: "capitalize" }}>
+                    {doc.doc_type.replaceAll("_", " ")}
+                  </strong>
+                  <small style={{ color: "var(--setu-muted)", fontSize: "0.72rem" }}>
+                    {doc.original_filename}
+                  </small>
+                </div>
+                <span className={`setu-status ${DOC_STATUS_CLASSES[doc.status]}`} style={{ fontSize: "0.68rem" }}>
+                  {doc.status.replaceAll("_", " ")}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
 
 function Applications({ journeys }: { journeys: JourneySummaryView[] }) {
   return (
-    <section className="setu-section">
-      <div className="setu-section-heading">
+    <section className="setu-panel">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
         <div>
-          <p className="setu-eyebrow">MY APPLICATIONS</p>
-          <h2>Service journeys</h2>
+          <span className="setu-ink-kicker">APPLICATION TRACKING</span>
+          <h2 style={{ margin: "2px 0", fontSize: "1.25rem", color: "var(--setu-navy)" }}>
+            All Active & Past Service Journeys
+          </h2>
         </div>
-        <Link href="/services" className="setu-button setu-button-primary">
-          Start a service
+        <Link href="/services" className="setu-btn setu-btn-primary" style={{ fontSize: "0.8rem" }}>
+          Start New Service
         </Link>
       </div>
 
       {journeys.length === 0 ? (
-        <EmptyState
-          title="No applications yet"
-          detail="Choose a life event to start your first SETU journey."
-          action={
-            <Link href="/services" className="setu-button setu-button-secondary">
-              Discover services
-            </Link>
-          }
-        />
+        <div style={{ textAlign: "center", padding: "40px 16px" }}>
+          <p className="setu-muted" style={{ margin: "0 0 16px" }}>
+            No service applications have been started yet.
+          </p>
+          <Link href="/services" className="setu-btn setu-btn-secondary">
+            Browse Services
+          </Link>
+        </div>
       ) : (
-        <div className="setu-application-list">
+        <div style={{ display: "grid", gap: "12px" }}>
           {journeys.map((journey) => (
             <Link
-              href={`/journeys/${journey.application_id}`}
-              className="setu-application-card"
               key={journey.application_id}
+              href={`/journeys/${journey.application_id}`}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "16px 20px",
+                background: "#ffffff",
+                border: "1px solid var(--setu-line)",
+                borderRadius: "var(--setu-radius)",
+                textDecoration: "none",
+                color: "inherit",
+              }}
             >
               <div>
-                <p className="setu-eyebrow">APPLICATION</p>
-                <h3>{journey.life_event_title_en}</h3>
-                <small>
-                  {journey.application_id} ·{" "}
-                  {new Date(journey.created_at).toLocaleDateString()}
+                <span className="setu-kicker" style={{ color: "var(--setu-saffron)", fontSize: "0.7rem" }}>
+                  CONNECTED JOURNEY
+                </span>
+                <h3 style={{ margin: "4px 0", fontSize: "1.05rem", color: "var(--setu-navy)" }}>
+                  {journey.life_event_title_en}
+                </h3>
+                <small style={{ color: "var(--setu-muted)", fontSize: "0.75rem" }}>
+                  Application ID: <code>{journey.application_id}</code> · Started {new Date(journey.created_at).toLocaleDateString()}
                 </small>
               </div>
-              <span
-                className={`setu-status ${
-                  journey.is_complete
-                    ? "setu-status-success"
-                    : "setu-status-progress"
-                }`}
-              >
-                {journey.is_complete ? "Complete" : "In progress"}
-              </span>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <span className={`setu-status ${journey.is_complete ? "setu-status-verified" : "setu-status-progress"}`}>
+                  {journey.is_complete ? "Complete" : "In Progress"}
+                </span>
+                <span style={{ color: "var(--setu-blue)", fontWeight: 800 }}>Open →</span>
+              </div>
             </Link>
           ))}
         </div>
@@ -595,41 +697,55 @@ function Applications({ journeys }: { journeys: JourneySummaryView[] }) {
 
 function Documents({ documents }: { documents: DocumentView[] }) {
   return (
-    <section className="setu-section">
-      <div className="setu-section-heading">
+    <section className="setu-panel">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
         <div>
-          <p className="setu-eyebrow">DOCUMENT VAULT</p>
-          <h2>Your documents</h2>
+          <span className="setu-ink-kicker">DOCUMENT VAULT</span>
+          <h2 style={{ margin: "2px 0", fontSize: "1.25rem", color: "var(--setu-navy)" }}>
+            Stored Vault Credentials
+          </h2>
         </div>
-        <Link href="/vault" className="setu-button setu-button-primary">
-          Open vault
+        <Link href="/vault" className="setu-btn setu-btn-primary" style={{ fontSize: "0.8rem" }}>
+          Open Full Vault
         </Link>
       </div>
 
       {documents.length === 0 ? (
-        <EmptyState
-          title="No documents stored"
-          detail="Upload a document once and reuse it across eligible service journeys."
-          action={
-            <Link href="/vault" className="setu-button setu-button-secondary">
-              Upload document
-            </Link>
-          }
-        />
+        <div style={{ textAlign: "center", padding: "40px 16px" }}>
+          <p className="setu-muted" style={{ margin: "0 0 16px" }}>
+            No documents in your vault yet.
+          </p>
+          <Link href="/vault" className="setu-btn setu-btn-secondary">
+            Upload Document
+          </Link>
+        </div>
       ) : (
-        <div className="setu-document-list setu-document-list-large">
+        <div style={{ display: "grid", gap: "10px" }}>
           {documents.map((doc) => (
-            <Link href="/vault" key={doc.id} className="setu-document-row">
-              <span>
-                <strong>{doc.doc_type.replaceAll("_", " ")}</strong>
-                <small>
-                  {doc.original_filename} ·{" "}
-                  {(doc.size_bytes / 1024).toFixed(0)} KB
+            <Link
+              key={doc.id}
+              href="/vault"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "14px 18px",
+                background: "#ffffff",
+                border: "1px solid var(--setu-line)",
+                borderRadius: "var(--setu-radius)",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <div>
+                <strong style={{ fontSize: "0.95rem", color: "var(--setu-navy)", textTransform: "capitalize" }}>
+                  {doc.doc_type.replaceAll("_", " ")}
+                </strong>
+                <small style={{ display: "block", color: "var(--setu-muted)", fontSize: "0.74rem", marginTop: "2px" }}>
+                  {doc.original_filename} · {(doc.size_bytes / 1024).toFixed(0)} KB
                 </small>
-              </span>
-              <span
-                className={`setu-status ${DOC_STATUS_CLASSES[doc.status]}`}
-              >
+              </div>
+              <span className={`setu-status ${DOC_STATUS_CLASSES[doc.status]}`}>
                 {doc.status.replaceAll("_", " ")}
               </span>
             </Link>
@@ -640,82 +756,51 @@ function Documents({ documents }: { documents: DocumentView[] }) {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  detail,
-  accent,
-  onClick,
-}: {
-  label: string;
-  value: number;
-  detail: string;
-  accent: "blue" | "green" | "orange" | "red";
-  onClick: () => void;
-}) {
+function SchemesPreview() {
   return (
-    <button className={`setu-stat-card accent-${accent}`} onClick={onClick}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <small>{detail}</small>
-    </button>
-  );
-}
+    <section className="setu-panel">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+        <div>
+          <span className="setu-ink-kicker">GOVERNMENT SCHEMES</span>
+          <h2 style={{ margin: "2px 0", fontSize: "1.25rem", color: "var(--setu-navy)" }}>
+            Recommended Schemes for Maharashtra Citizens
+          </h2>
+        </div>
+        <Link href="/schemes" className="setu-btn setu-btn-secondary" style={{ fontSize: "0.8rem" }}>
+          View Scheme Catalog →
+        </Link>
+      </div>
 
-function DocumentMetric({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="setu-document-metric">
-      <strong>{value}</strong>
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <label className="setu-field">
-      <span>{label}</span>
-      <input
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      />
-    </label>
-  );
-}
-
-function EmptyState({
-  title,
-  detail,
-  action,
-}: {
-  title: string;
-  detail: string;
-  action?: React.ReactNode;
-}) {
-  return (
-    <div className="setu-empty-state">
-      <span className="setu-empty-mark">—</span>
-      <strong>{title}</strong>
-      <p>{detail}</p>
-      {action}
-    </div>
-  );
-}
-
-function DashboardSkeleton() {
-  return (
-    <div className="setu-skeleton-grid" aria-label="Loading">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <div key={index} className="setu-skeleton-card" />
-      ))}
-    </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "14px" }}>
+        {SCHEME_CATALOG.map((scheme) => (
+          <div
+            key={scheme.id}
+            style={{
+              padding: "16px",
+              background: "#f8fafc",
+              border: "1px solid var(--setu-line)",
+              borderRadius: "var(--setu-radius)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <span className="setu-status setu-status-verified" style={{ fontSize: "0.68rem" }}>{scheme.category}</span>
+                <span style={{ fontSize: "0.72rem", color: "var(--setu-muted)" }}>{scheme.status}</span>
+              </div>
+              <h3 style={{ margin: "4px 0", fontSize: "1rem", color: "var(--setu-navy)" }}>{scheme.title}</h3>
+              <p style={{ margin: "0 0 10px", fontSize: "0.78rem", color: "var(--setu-muted)", lineHeight: "1.5" }}>
+                {scheme.summary}
+              </p>
+            </div>
+            <Link href={`/schemes/${scheme.id}`} className="setu-btn-tertiary" style={{ fontSize: "0.8rem", alignSelf: "flex-start" }}>
+              View Eligibility & Benefits →
+            </Link>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

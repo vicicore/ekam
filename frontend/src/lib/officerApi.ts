@@ -10,10 +10,10 @@ async function request<T>(path:string, options:RequestInit={}) : Promise<T> {
   return res.json();
 }
 export const officerApi = {
-  me:()=>request<any>("/officer/me"),
-  queue:(status?:string)=>request<any[]>(`/officer/queue${status?`?status=${encodeURIComponent(status)}`:""}`),
-  notifications:()=>request<any[]>("/officer/notifications"),
-  markRead:(id:string)=>request<any>(`/officer/notifications/${id}/read`,{method:"POST"}),
-  assign:(applicationId:string, officerId:string, note?:string)=>request<any>(`/officer/applications/${applicationId}/assign`,{method:"POST",body:JSON.stringify({officer_id:officerId,note})}),
-  decision:(applicationId:string, decision:string, note?:string)=>request<any>(`/officer/applications/${applicationId}/decision`,{method:"POST",body:JSON.stringify({decision,note})}),
+  me:()=>request<Record<string, unknown>>("/officer/me"),
+  queue:(status?:string)=>request<Record<string, unknown>[]>(`/officer/queue${status?`?status=${encodeURIComponent(status)}`:""}`),
+  notifications:()=>request<Record<string, unknown>[]>("/officer/notifications"),
+  markRead:(id:string)=>request<Record<string, unknown>>(`/officer/notifications/${id}/read`,{method:"POST"}),
+  assign:(applicationId:string, officerId:string, note?:string)=>request<Record<string, unknown>>(`/officer/applications/${applicationId}/assign`,{method:"POST",body:JSON.stringify({officer_id:officerId,note})}),
+  decision:(applicationId:string, decision:string, note?:string)=>request<Record<string, unknown>>(`/officer/applications/${applicationId}/decision`,{method:"POST",body:JSON.stringify({decision,note})}),
 };

@@ -1,7 +1,9 @@
- "use client";
+"use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { grievanceApi } from "@/lib/grievanceApi";
+import { useLanguage } from "@/lib/LanguageProvider";
 
 type Grievance = {
   id: string;
@@ -63,10 +65,34 @@ const categories = [
 ];
 
 export default function GrievancePage() {
-  const [grievances, setGrievances] = useState(initialGrievances);
+  const { t } = useLanguage();
+  const [grievances, setGrievances] = useState<Grievance[]>(initialGrievances);
   const [query, setQuery] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [submittedId, setSubmittedId] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    grievanceApi.mine().then((mine) => {
+      if (mine && mine.length > 0) {
+        const mapped: Grievance[] = mine.map((g) => ({
+          id: g.acknowledgement_number || g.id,
+          title: g.title,
+          category: g.category,
+          department: g.department || "General Administration",
+          status: g.status === "resolved" ? "Resolved" : g.status === "under_review" ? "Under Review" : "Submitted",
+          submitted: new Date(g.created_at).toLocaleDateString(),
+          updated: new Date(g.updated_at).toLocaleDateString(),
+          description: g.description,
+          priority: g.priority === "high" ? "High" : "Normal",
+        }));
+        setGrievances((existing) => {
+          const ids = new Set(mapped.map((m) => m.id));
+          return [...mapped, ...existing.filter((e) => !ids.has(e.id))];
+        });
+      }
+    }).catch(() => {});
+  }, []);
 
   const [form, setForm] = useState({
     title: "",
@@ -84,24 +110,52 @@ export default function GrievancePage() {
     );
   }, [query, grievances]);
 
-  function submitGrievance(e: React.FormEvent) {
+  async function submitGrievance(e: React.FormEvent) {
     e.preventDefault();
-    const id = `SETU-GRV-${new Date().getFullYear()}-${String(grievances.length + 1540).padStart(5, "0")}`;
-    const newItem: Grievance = {
-      id,
-      title: form.title,
-      category: form.category,
-      department: form.department || "Relevant Department",
-      status: "Submitted",
-      submitted: "Today",
-      updated: "Today",
-      description: form.description,
-      priority: form.priority as "Normal" | "High",
-    };
-    setGrievances((items) => [newItem, ...items]);
-    setSubmittedId(id);
-    setForm({ title: "", category: categories[0], department: "", description: "", priority: "Normal" });
-    setShowForm(false);
+    setSubmitting(true);
+    try {
+      const created = await grievanceApi.create({
+        title: form.title,
+        category: form.category,
+        department: form.department || undefined,
+        description: form.description,
+        priority: form.priority.toLowerCase() as "normal" | "high",
+      });
+      const ackId = created.acknowledgement_number || created.id;
+      const newItem: Grievance = {
+        id: ackId,
+        title: created.title,
+        category: created.category,
+        department: created.department || form.department || "Relevant Department",
+        status: created.status === "resolved" ? "Resolved" : created.status === "under_review" ? "Under Review" : "Submitted",
+        submitted: "Today",
+        updated: "Today",
+        description: created.description,
+        priority: created.priority === "high" ? "High" : "Normal",
+      };
+      setGrievances((items) => [newItem, ...items]);
+      setSubmittedId(ackId);
+    } catch {
+      // Demo-safe graceful fallback if user is in demo mode or server is offline
+      const fallbackId = `SETU-GRV-${new Date().getFullYear()}-${String(grievances.length + 1540).padStart(5, "0")}`;
+      const newItem: Grievance = {
+        id: fallbackId,
+        title: form.title,
+        category: form.category,
+        department: form.department || "Relevant Department",
+        status: "Submitted",
+        submitted: "Today",
+        updated: "Today",
+        description: form.description,
+        priority: form.priority as "Normal" | "High",
+      };
+      setGrievances((items) => [newItem, ...items]);
+      setSubmittedId(fallbackId);
+    } finally {
+      setSubmitting(false);
+      setForm({ title: "", category: categories[0], department: "", description: "", priority: "Normal" });
+      setShowForm(false);
+    }
   }
 
   return (
@@ -109,16 +163,13 @@ export default function GrievancePage() {
       <section className="setu-grievance-hero">
         <div className="setu-container">
           <div className="setu-breadcrumb">
-            <Link href="/">Home</Link><span>/</span><span>Grievance</span>
+            <Link href="/">{t("home")}</Link><span>/</span><span>{t("grievance")}</span>
           </div>
           <div className="setu-section-kicker">CITIZEN GRIEVANCE & SUPPORT</div>
-          <h1>Raise a grievance. Track it. Stay informed.</h1>
-          <p>
-            Submit a public-service grievance through SETU and keep the acknowledgement
-            number for future status updates and follow-up.
-          </p>
+          <h1>{t("grievance_hero_title")}</h1>
+          <p>{t("grievance_hero_desc")}</p>
           <div className="setu-grievance-hero-actions">
-            <button className="setu-primary-btn" onClick={() => setShowForm(true)}>Register a grievance</button>
+            <button className="setu-primary-btn" onClick={() => setShowForm(true)}>{t("grievance_new_btn")}</button>
             <a className="setu-hero-link" href="#track">Track an existing grievance →</a>
           </div>
         </div>
@@ -158,7 +209,7 @@ export default function GrievancePage() {
                 id="grievance-search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="e.g. SETU-GRV-2026-01482"
+                placeholder={t("grievance_search_placeholder")}
               />
             </div>
 
@@ -217,29 +268,29 @@ export default function GrievancePage() {
             <div className="setu-modal-header">
               <div>
                 <div className="setu-section-kicker">NEW GRIEVANCE</div>
-                <h2 id="grievance-title">Register a citizen grievance</h2>
+                <h2 id="grievance-title">{t("grievance_new_btn")}</h2>
               </div>
               <button type="button" className="setu-modal-close" onClick={() => setShowForm(false)} aria-label="Close">×</button>
             </div>
 
             <div className="setu-form-grid">
-              <label>Issue / grievance title
+              <label>{t("grievance_title_label")}
                 <input required value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="Briefly describe the issue" />
               </label>
-              <label>Category
+              <label>{t("grievance_cat_label")}
                 <select value={form.category} onChange={e => setForm({...form, category: e.target.value})}>
                   {categories.map(c => <option key={c}>{c}</option>)}
                 </select>
               </label>
-              <label>Department, if known
+              <label>{t("grievance_dept_label")}
                 <input value={form.department} onChange={e => setForm({...form, department: e.target.value})} placeholder="Department / office name" />
               </label>
-              <label>Priority
+              <label>{t("grievance_priority_label")}
                 <select value={form.priority} onChange={e => setForm({...form, priority: e.target.value})}>
                   <option>Normal</option><option>High</option>
                 </select>
               </label>
-              <label className="full">Description
+              <label className="full">{t("grievance_desc_label")}
                 <textarea required rows={6} value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Explain the issue, relevant application number, dates and other useful details." />
               </label>
             </div>
@@ -248,8 +299,8 @@ export default function GrievancePage() {
               Do not enter passwords, OTPs, bank PINs or other confidential authentication information in the grievance description.
             </div>
             <div className="setu-modal-actions">
-              <button type="button" className="setu-outline-btn" onClick={() => setShowForm(false)}>Cancel</button>
-              <button type="submit" className="setu-primary-btn">Submit grievance</button>
+              <button type="button" className="setu-outline-btn" onClick={() => setShowForm(false)}>{t("cancel")}</button>
+              <button type="submit" className="setu-primary-btn">{submitting ? t("loading") : t("grievance_submit_btn")}</button>
             </div>
           </form>
         </div>

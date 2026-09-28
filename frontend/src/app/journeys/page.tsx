@@ -39,38 +39,73 @@ export default function JourneysPage() {
 
   if (!isLoggedIn || !citizenId) {
     return (
-      <main className="setu-page">
-        <section className="setu-login-panel">
-          <p className="setu-eyebrow">APPLICATIONS</p>
-          <h1>Sign in to track your services</h1>
-          <p>SETU keeps your service journeys, department stages and application progress together.</p>
-          <Link href="/login" className="setu-button setu-button-primary">
-            Log in to SETU
-          </Link>
+      <main className="setu-container" style={{ padding: "48px 16px", minHeight: "75vh" }}>
+        <div className="setu-breadcrumb" style={{ marginBottom: "20px" }}>
+          <Link href="/" style={{ color: "var(--setu-blue)", textDecoration: "none" }}>Home</Link>
+          <span>/</span>
+          <span>Application Tracker</span>
+        </div>
+        <section style={{
+          background: "var(--setu-surface)",
+          border: "1px solid var(--setu-border)",
+          borderRadius: "var(--setu-radius-lg)",
+          padding: "40px 24px",
+          textAlign: "center",
+          maxWidth: "540px",
+          margin: "40px auto",
+          boxShadow: "0 4px 20px rgba(16, 42, 67, 0.05)"
+        }}>
+          <p className="setu-section-kicker">APPLICATION TRACKER</p>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--setu-navy)", margin: "8px 0 12px 0" }}>
+            Sign In to Track Your Services
+          </h1>
+          <p style={{ fontSize: "0.95rem", color: "var(--setu-slate)", margin: "0 auto 24px auto", maxWidth: "420px", lineHeight: 1.5 }}>
+            SETU connects multiple departments, providing real-time status, document verification, and statutory SLA tracking in one place.
+          </p>
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+            <Link href="/login" className="setu-btn setu-btn-primary">
+              Log In to My SETU →
+            </Link>
+            <Link href="/services" className="setu-btn setu-btn-secondary">
+              Browse Services
+            </Link>
+          </div>
         </section>
       </main>
     );
   }
 
   return (
-    <main className="setu-page">
-      <header className="setu-dashboard-header">
+    <main className="setu-container" style={{ padding: "40px 16px 80px 16px" }}>
+      <div className="setu-breadcrumb" style={{ marginBottom: "16px" }}>
+        <Link href="/" style={{ color: "var(--setu-blue)", textDecoration: "none" }}>{t("home")}</Link>
+        <span>/</span>
+        <Link href="/profile" style={{ color: "var(--setu-blue)", textDecoration: "none" }}>{t("mySetu")}</Link>
+        <span>/</span>
+        <span>{t("journeys_hero_title")}</span>
+      </div>
+
+      <header className="setu-dashboard-header" style={{ marginBottom: "28px" }}>
         <div>
-          <p className="setu-eyebrow">MY SETU</p>
-          <h1>Application Tracker</h1>
-          <p>Follow every service journey from submission through completion.</p>
+          <p className="setu-section-kicker">GOVERNMENT OF MAHARASHTRA • RTS</p>
+          <h1 style={{ fontSize: "2rem", fontWeight: 800, color: "var(--setu-navy)", margin: "4px 0 8px 0" }}>
+            {t("journeys_hero_title")}
+          </h1>
+          <p style={{ color: "var(--setu-slate)", margin: 0, fontSize: "0.95rem" }}>
+            {t("journeys_hero_desc")}
+          </p>
         </div>
-        <Link href="/services" className="setu-button setu-button-primary">
-          Start a new service
+        <Link href="/services" className="setu-btn setu-btn-primary">
+          {t("journeys_start_new")}
         </Link>
       </header>
 
       {error && <div className="setu-alert setu-alert-error">{error}</div>}
 
       <section className="setu-journey-summary-grid">
-        <SummaryCard label="All applications" value={journeys?.length ?? 0} />
-        <SummaryCard label="In progress" value={journeys?.filter((j) => !j.is_complete).length ?? 0} />
-        <SummaryCard label="Completed" value={journeys?.filter((j) => j.is_complete).length ?? 0} />
+        <SummaryCard label={t("journeys_all")} value={journeys?.length ?? 0} />
+        <SummaryCard label={t("journeys_in_progress")} value={journeys?.filter((j) => !j.is_complete).length ?? 0} />
+        <SummaryCard label={t("journeys_completed")} value={journeys?.filter((j) => j.is_complete).length ?? 0} />
       </section>
 
       <div className="setu-filterbar" role="tablist" aria-label="Application filters">
@@ -82,7 +117,7 @@ export default function JourneysPage() {
             role="tab"
             aria-selected={filter === value}
           >
-            {value === "all" ? "All" : value === "active" ? "In progress" : "Completed"}
+            {value === "all" ? t("journeys_all") : value === "active" ? t("journeys_in_progress") : t("journeys_completed")}
           </button>
         ))}
       </div>

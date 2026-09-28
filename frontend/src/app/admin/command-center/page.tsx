@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getAdminAnalytics, type AdminAnalytics } from "@/lib/adminAnalyticsApi";
+import "./globals-phase23.css";
 
 function MetricCard({ label, value, hint, danger = false }: { label: string; value: number; hint: string; danger?: boolean }) {
   return <div className={`cc-card metric-card ${danger ? "metric-danger" : ""}`}><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-hint">{hint}</div></div>;

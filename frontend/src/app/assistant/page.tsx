@@ -1,8 +1,10 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { assistantApi } from "@/lib/assistantApi";
+import { useLanguage } from "@/lib/LanguageProvider";
+import "./assistant.css";
 
 type Message = {
   role: "user" | "assistant";
@@ -11,16 +13,8 @@ type Message = {
   actions?: { label: string; route: string }[];
 };
 
-const prompts = [
-  "How do I track my application?",
-  "Where can I find my documents?",
-  "Tell me about government schemes.",
-  "How can I register a grievance?",
-  "Find Maharashtra services.",
-];
-
 export default function AssistantPage() {
-  const [language, setLanguage] = useState<"en" | "hi" | "mr">("en");
+  const { language, t } = useLanguage();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -29,6 +23,18 @@ export default function AssistantPage() {
       text: "Hello. I can help you navigate SETU services, schemes, documents, applications, grievances and Maharashtra service information.",
     },
   ]);
+
+  const prompts = useMemo(
+    () => [
+      t("assistant_prompt_track"),
+      t("assistant_prompt_docs"),
+      t("assistant_prompt_schemes"),
+      t("assistant_prompt_grievance"),
+      t("assistant_prompt_services"),
+      t("assistant_prompt_caste"),
+    ],
+    [t],
+  );
 
   async function send(e?: FormEvent) {
     e?.preventDefault();
@@ -62,32 +68,38 @@ export default function AssistantPage() {
 
   return (
     <main className="assistant-page">
-      <section className="assistant-hero">
-        <div>
-          <span className="assistant-kicker">SETU ASSISTANT</span>
-          <h1>Find your way through SETU.</h1>
-          <p>
-            Ask about services, schemes, documents, applications, grievances,
-            or Maharashtra service navigation.
-          </p>
-        </div>
-        <label className="assistant-language">
-          Language
-          <select value={language} onChange={(e) => setLanguage(e.target.value as any)}>
-            <option value="en">English</option>
-            <option value="hi">हिन्दी</option>
-            <option value="mr">मराठी</option>
-          </select>
-        </label>
-      </section>
-
       <section className="assistant-shell">
-        <div className="assistant-prompts">
-          {prompts.map((prompt) => (
-            <button key={prompt} onClick={() => setInput(prompt)}>{prompt}</button>
-          ))}
+        {/* 1. SETU Assistant Header / Introduction */}
+        <header className="assistant-header">
+          <span className="assistant-kicker">SETU ASSISTANT</span>
+          <h1 className="assistant-title">{t("qa_assistant_title")}</h1>
+          <p className="assistant-intro">{t("assistant_hero_desc")}</p>
+        </header>
+
+        {/* 2. Ask SETU Area (Primary Interaction) */}
+        <form className="assistant-composer" onSubmit={send}>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t("assistant_placeholder")}
+            aria-label="Ask SETU Assistant"
+          />
+          <button type="submit" disabled={loading || !input.trim()}>
+            {loading ? t("loading") : t("assistant_ask_btn")}
+          </button>
+        </form>
+
+        {/* 3. Suggested Questions (Clean Quick-Action Chips Below Input) */}
+        <div className="assistant-suggestions">
+          <span className="assistant-suggestions-label">{t("assistant_suggested_label")}:</span>
+          <div className="assistant-prompts">
+            {prompts.map((prompt) => (
+              <button key={prompt} type="button" onClick={() => setInput(prompt)}>{prompt}</button>
+            ))}
+          </div>
         </div>
 
+        {/* 4. Existing Assistant Content / Response Area */}
         <div className="assistant-messages" aria-live="polite">
           {messages.map((message, index) => (
             <div className={`assistant-message ${message.role}`} key={`${message.role}-${index}`}>
@@ -120,18 +132,7 @@ export default function AssistantPage() {
           {loading && <div className="assistant-typing">SETU is checking its knowledge base…</div>}
         </div>
 
-        <form className="assistant-composer" onSubmit={send}>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a SETU question..."
-            aria-label="Ask SETU Assistant"
-          />
-          <button type="submit" disabled={loading || !input.trim()}>
-            {loading ? "Checking…" : "Ask SETU"}
-          </button>
-        </form>
-
+        {/* 5. Notice */}
         <div className="assistant-notice">
           SETU Assistant answers are grounded only in the configured SETU
           knowledge base. Always verify eligibility, official requirements and

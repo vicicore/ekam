@@ -20,6 +20,7 @@ export default function AccessibilityToolbar() {
   useEffect(() => {
     const saved = localStorage.getItem("setu-a11y");
     if (!saved) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     try { setPrefs({ ...DEFAULTS, ...JSON.parse(saved) }); } catch {}
   }, []);
 
