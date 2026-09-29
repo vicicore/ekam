@@ -313,7 +313,7 @@ export default function JourneyDetailPage() {
                       <strong style={{ color: "var(--setu-blue)", display: "block" }}>{t("op_what_setu_doing")}</strong>
                       <span style={{ color: "#334155" }}>
                         {step.status === "verified"
-                          ? "Verified prerequisite satisfied from SETU Document Vault. Credential securely linked."
+                          ? "Verified prerequisite satisfied from EKAM Document Vault. Credential securely linked."
                           : step.status === "in_progress"
                           ? "Cross-department handoff active. Transmitting payload to connector and monitoring SLA timers."
                           : "Evaluating dependencies and awaiting required consent/clearance."}
@@ -361,7 +361,7 @@ export default function JourneyDetailPage() {
                       </p>
                     ) : (
                       <p style={{ margin: "4px 0 0", color: "#374151" }}>
-                        Explicit permission must be granted before SETU transfers your vault credentials to {step.department}.
+                        Explicit permission must be granted before EKAM transfers your vault credentials to {step.department}.
                       </p>
                     )}
                   </div>
@@ -536,7 +536,7 @@ export default function JourneyDetailPage() {
             </div>
 
             <p style={{ fontSize: "0.84rem", color: "var(--setu-muted)", lineHeight: "1.5", margin: "0 0 16px" }}>
-              Under SETU data governance guidelines, you must explicitly permit the sharing of your verified profile details and vault documents before they are transmitted.
+              Under EKAM data governance guidelines, you must explicitly permit the sharing of your verified profile details and vault documents before they are transmitted.
             </p>
 
             <dl style={{ display: "grid", gap: "10px", margin: "16px 0", fontSize: "0.82rem", background: "#f8fafc", padding: "14px", borderRadius: "var(--setu-radius)", border: "1px solid var(--setu-line)" }}>

@@ -39,7 +39,7 @@ export default function AdminCommandCenterPage() {
   const s = data.summary;
   return <main className="cc-shell">
     <header className="cc-header">
-      <div><div className="eyebrow">SETU ADMINISTRATION</div><h1>Command Center</h1><p>Operational visibility across applications, departments, SLAs and audit activity.</p></div>
+      <div><div className="eyebrow">EKAM ADMINISTRATION</div><h1>Command Center</h1><p>Operational visibility across applications, departments, SLAs and audit activity.</p></div>
       <button className="refresh-btn" disabled={refreshing} onClick={() => { setRefreshing(true); void load(); }}>{refreshing ? "Refreshing…" : "Refresh data"}</button>
     </header>
 
@@ -63,6 +63,6 @@ export default function AdminCommandCenterPage() {
 
     <section className="cc-card panel activity-panel"><div className="panel-heading"><div><h2>Recent audit activity</h2><span>Latest recorded platform events</span></div></div>{data.recent_activity.length ? <div className="activity-list">{data.recent_activity.map(item => <div className="activity-row" key={item.id}><div className="activity-dot"/><div className="activity-main"><strong>{item.action}</strong><span>{item.resource_type}{item.resource_id ? ` · ${item.resource_id}` : ""}</span></div><div className="activity-time">{new Date(item.created_at).toLocaleString()}</div></div>)}</div> : <div className="empty-state">No audit activity has been recorded yet.</div>}</section>
 
-    <p className="data-note">Analytics are calculated from SETU’s persisted application and audit records. This dashboard does not imply live connectivity to external government department systems.</p>
+    <p className="data-note">Analytics are calculated from EKAM’s persisted application and audit records. This dashboard does not imply live connectivity to external government department systems.</p>
   </main>;
 }

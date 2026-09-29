@@ -378,7 +378,7 @@ export const journeyApi = {
     }),
 };
 
-// Compatibility exports for feature modules introduced in later SETU phases.
+// Compatibility exports for feature modules introduced in later EKAM phases.
 export const apiRequest = request;
 export const api = { request };
 

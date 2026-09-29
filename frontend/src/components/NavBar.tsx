@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -50,7 +51,7 @@ export function NavBar() {
             <span style={{ opacity: 0.6 }}>|</span>
             <span>Government of Maharashtra</span>
             <span style={{ opacity: 0.6 }}>·</span>
-            <span style={{ color: "#d2dfea" }}>SETU Citizen Portal</span>
+            <span style={{ color: "#d2dfea" }}>EKAM Citizen Portal</span>
           </div>
 
           <div className="setu-utility-right">
@@ -78,10 +79,17 @@ export function NavBar() {
       <div className="setu-nav-inner">
         {/* Brand */}
         <Link href="/" className="setu-brand" onClick={() => setMobileOpen(false)}>
-          <span className="setu-brand-mark" aria-hidden="true">S</span>
+          <Image
+            src="/ekam-emblem.png"
+            alt="EKAM Emblem"
+            width={40}
+            height={40}
+            priority
+            style={{ width: "40px", height: "40px", objectFit: "contain", flexShrink: 0 }}
+          />
           <div>
-            <strong>SETU</strong>
-            <small>Seamless Exchange & Transformative Ubiquity</small>
+            <strong>EKAM</strong>
+            <small>One Gateway. Connected Services.</small>
           </div>
         </Link>
 
@@ -126,7 +134,7 @@ export function NavBar() {
                 href="/profile"
                 className="setu-nav-user-pill"
                 onClick={() => setMobileOpen(false)}
-                title="Open My SETU Citizen Dashboard"
+                title="Open My EKAM Citizen Dashboard"
               >
                 <span className={`setu-nav-avatar ${role === "admin" ? "is-admin" : ""}`}>
                   {getInitials()}

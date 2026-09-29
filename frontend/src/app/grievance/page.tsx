@@ -19,7 +19,7 @@ type Grievance = {
 
 const initialGrievances: Grievance[] = [
   {
-    id: "SETU-GRV-2026-01482",
+    id: "EKAM-GRV-2026-01482",
     title: "Delay in certificate service",
     category: "Certificates & Documents",
     department: "Revenue Department",
@@ -30,7 +30,7 @@ const initialGrievances: Grievance[] = [
     priority: "High",
   },
   {
-    id: "SETU-GRV-2026-01317",
+    id: "EKAM-GRV-2026-01317",
     title: "Service information request",
     category: "Citizen Services",
     department: "District Administration",
@@ -41,7 +41,7 @@ const initialGrievances: Grievance[] = [
     priority: "Normal",
   },
   {
-    id: "SETU-GRV-2026-00964",
+    id: "EKAM-GRV-2026-00964",
     title: "Status update requested",
     category: "Application Tracking",
     department: "Transport Department",
@@ -137,7 +137,7 @@ export default function GrievancePage() {
       setSubmittedId(ackId);
     } catch {
       // Demo-safe graceful fallback if user is in demo mode or server is offline
-      const fallbackId = `SETU-GRV-${new Date().getFullYear()}-${String(grievances.length + 1540).padStart(5, "0")}`;
+      const fallbackId = `EKAM-GRV-${new Date().getFullYear()}-${String(grievances.length + 1540).padStart(5, "0")}`;
       const newItem: Grievance = {
         id: fallbackId,
         title: form.title,
@@ -190,7 +190,7 @@ export default function GrievancePage() {
           <div><span>Active grievances</span><strong>{grievances.filter(g => g.status !== "Resolved").length}</strong></div>
           <div><span>Under review</span><strong>{grievances.filter(g => g.status === "Under Review").length}</strong></div>
           <div><span>Resolved</span><strong>{grievances.filter(g => g.status === "Resolved").length}</strong></div>
-          <div><span>Support channel</span><strong>SETU</strong></div>
+          <div><span>Support channel</span><strong>EKAM</strong></div>
         </div>
 
         <div className="setu-grievance-layout">
@@ -248,7 +248,7 @@ export default function GrievancePage() {
               <h2>Four simple steps</h2>
               <ol>
                 <li><b>Register</b><span>Describe the issue and select the relevant category.</span></li>
-                <li><b>Acknowledgement</b><span>SETU generates a unique grievance number.</span></li>
+                <li><b>Acknowledgement</b><span>EKAM generates a unique grievance number.</span></li>
                 <li><b>Review</b><span>The grievance is routed to the appropriate workflow.</span></li>
                 <li><b>Resolution</b><span>Updates and the final response remain visible to the citizen.</span></li>
               </ol>

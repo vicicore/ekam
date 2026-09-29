@@ -77,7 +77,7 @@ export default function AdminOperationsPage() {
     <main className="min-h-screen bg-slate-50">
       <header className="border-b bg-white">
         <div className="mx-auto max-w-7xl px-5 py-8">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">SETU · Government Operations</p>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">EKAM · Government Operations</p>
           <div className="mt-2 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
               <h1 className="text-3xl font-bold text-slate-950">Officer Operations Desk</h1>

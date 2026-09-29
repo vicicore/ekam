@@ -52,7 +52,7 @@ export default function MaharashtraIntelligencePage() {
           <span className="eyebrow">MAHARASHTRA SERVICE INTELLIGENCE</span>
           <h1>District → Department → Service</h1>
           <p>
-            Explore SETU's structured Maharashtra service layer and move from
+            Explore EKAM's structured Maharashtra service layer and move from
             a citizen's location to the relevant service workflow.
           </p>
         </div>

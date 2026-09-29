@@ -11,7 +11,7 @@ export default function Phase26Demo() {
     <main className="phase26-demo">
       <header className="phase26-demo__header">
         <div>
-          <span className="phase26-kicker">SETU · PHASE 26</span>
+          <span className="phase26-kicker">EKAM · PHASE 26</span>
           <h1>{t("welcome")}</h1>
           <p>{t("citizenServices")}</p>
         </div>

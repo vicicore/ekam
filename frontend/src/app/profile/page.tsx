@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ApiError,
   CitizenProfileView,
@@ -174,9 +175,19 @@ export default function ProfilePage() {
     return (
       <div className="setu-page-shell" style={{ width: "min(var(--setu-max), calc(100% - 32px))", margin: "0 auto", padding: "48px 0" }}>
         <section className="setu-panel" style={{ maxWidth: "580px", margin: "40px auto", textAlign: "center", padding: "40px 24px" }}>
+          <div style={{ marginBottom: "16px" }}>
+            <Image
+              src="/ekam-logo-full.png"
+              alt="EKAM — One Gateway. Connected Services."
+              width={180}
+              height={170}
+              priority
+              style={{ margin: "0 auto", height: "auto", maxWidth: "180px" }}
+            />
+          </div>
           <span className="setu-ink-kicker">CITIZEN ACTION CENTER</span>
           <h1 style={{ fontSize: "1.8rem", color: "var(--setu-navy)", margin: "8px 0 12px" }}>
-            Sign in to access My SETU
+            Sign in to access My EKAM
           </h1>
           <p className="setu-muted" style={{ margin: "0 0 24px", lineHeight: "1.6" }}>
             View what needs your attention, track active service journeys, manage reusable documents, and keep your citizen profile current.
@@ -195,14 +206,24 @@ export default function ProfilePage() {
     <div className="setu-page-shell" style={{ width: "min(var(--setu-max), calc(100% - 32px))", margin: "0 auto", padding: "36px 0 60px" }}>
       {/* Header */}
       <header className="setu-dashboard-header" style={{ marginBottom: "24px" }}>
-        <div>
-          <span className="setu-ink-kicker">MAHARASHTRA CITIZEN ACTION CENTER</span>
-          <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", color: "var(--setu-navy)", margin: "4px 0 6px" }}>
-            {t("qa_dashboard_title")}
-          </h1>
-          <p className="setu-muted" style={{ margin: 0, fontSize: "0.95rem" }}>
-            {t("profile_subheading")}
-          </p>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
+          <Image
+            src="/ekam-emblem.png"
+            alt="EKAM Emblem"
+            width={44}
+            height={44}
+            priority
+            style={{ width: "44px", height: "44px", objectFit: "contain", flexShrink: 0, marginTop: "4px" }}
+          />
+          <div>
+            <span className="setu-ink-kicker">MAHARASHTRA CITIZEN ACTION CENTER</span>
+            <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", color: "var(--setu-navy)", margin: "4px 0 6px" }}>
+              {t("qa_dashboard_title")}
+            </h1>
+            <p className="setu-muted" style={{ margin: 0, fontSize: "0.95rem" }}>
+              {t("profile_subheading")}
+            </p>
+          </div>
         </div>
 
         <div className="setu-citizen-chip" style={{ background: "#fff", border: "1px solid var(--setu-line)", padding: "10px 16px", borderRadius: "var(--setu-radius)", display: "flex", alignItems: "center", gap: "12px" }}>
@@ -240,7 +261,7 @@ export default function ProfilePage() {
       )}
 
       {/* Tabs */}
-      <div className="setu-filter-chips" role="tablist" aria-label="My SETU sections" style={{ marginBottom: "24px" }}>
+      <div className="setu-filter-chips" role="tablist" aria-label="My EKAM sections" style={{ marginBottom: "24px" }}>
         {[
           ["overview", t("profile_tab_overview")],
           ["applications", `${t("profile_tab_applications")} (${journeys?.length ?? 0})`],

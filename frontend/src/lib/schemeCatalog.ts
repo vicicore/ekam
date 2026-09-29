@@ -12,7 +12,7 @@ export type SchemeRecord = {
   relatedLifeEvent?: string;
 };
 
-/** SETU scheme discovery catalogue. This is a structured prototype dataset, not a live department feed. */
+/** EKAM scheme discovery catalogue. This is a structured prototype dataset, not a live department feed. */
 export const SCHEME_CATALOG: SchemeRecord[] = [
   {
     id: "maha-scholarship",
@@ -21,7 +21,7 @@ export const SCHEME_CATALOG: SchemeRecord[] = [
     department: "Higher & Technical Education",
     summary: "Financial support information for eligible students pursuing higher education.",
     eligibility: ["Resident of Maharashtra", "Enrolled in an eligible institution", "Meets applicable income/category conditions"],
-    benefits: ["Scholarship assistance", "Application tracking", "Document reuse through SETU"],
+    benefits: ["Scholarship assistance", "Application tracking", "Document reuse through EKAM"],
     documents: ["Identity proof", "Residence proof", "Income certificate", "Institute admission proof"],
     status: "Open",
     tags: ["Students", "Scholarship"],

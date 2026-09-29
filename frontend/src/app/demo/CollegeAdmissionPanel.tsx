@@ -68,7 +68,7 @@ export function CollegeAdmissionPanel() {
       setDemoToken(session.token);
       await refreshAll(catalogView.citizen_id, catalogView.life_event_code, session.token);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not reach the SETU backend API.");
+      setError(err instanceof ApiError ? err.message : "Could not reach the EKAM backend API.");
     } finally {
       setLoading(false);
     }

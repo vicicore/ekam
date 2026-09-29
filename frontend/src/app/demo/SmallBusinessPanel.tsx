@@ -45,7 +45,7 @@ export function SmallBusinessPanel() {
         setJourney(detail);
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not reach the SETU backend API.");
+      setError(err instanceof ApiError ? err.message : "Could not reach the EKAM backend API.");
     } finally {
       setLoading(false);
     }
@@ -117,7 +117,7 @@ export function SmallBusinessPanel() {
           </>
         )}
         <p className="mt-3 text-xs text-slate-500">
-          This scenario proves SETU&apos;s orchestrator is generic: the same journeys API, the
+          This scenario proves EKAM&apos;s orchestrator is generic: the same journeys API, the
           same event-processing path, and three different mock connectors (Labour, Urban
           Development, Finance) — nothing about College Admission is hardcoded into it.
         </p>

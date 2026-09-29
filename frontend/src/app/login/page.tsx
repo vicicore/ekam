@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ApiError, citizenApi } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
@@ -45,7 +46,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     taluka: "Aurangabad",
   },
   {
-    name: "SETU Signature Journey",
+    name: "EKAM Signature Journey",
     identifier: "demo-college-admission-scholarship",
     phone: "9811002233",
     role: "College Admission & Scholarship Journey",
@@ -101,7 +102,7 @@ function LoginFormContent() {
       const session = await login(val);
       setSuccess(true);
 
-      // Pre-seed profile details for demo accounts so citizen dashboard / My SETU has rich data
+      // Pre-seed profile details for demo accounts so citizen dashboard / My EKAM has rich data
       const matchedDemo = DEMO_ACCOUNTS.find(
         (c) => c.identifier === val || c.phone === val,
       );
@@ -137,9 +138,9 @@ function LoginFormContent() {
           setError(err.message || "Unable to sign in. Please check your credentials and try again.");
         }
       } else if (err instanceof TypeError && err.message.toLowerCase().includes("fetch")) {
-        setError("Unable to connect to SETU services. Please verify the service is running and try again.");
+        setError("Unable to connect to EKAM services. Please verify the service is running and try again.");
       } else {
-        setError("Unable to connect to SETU services. Please try again.");
+        setError("Unable to connect to EKAM services. Please try again.");
       }
     } finally {
       setSubmitting(false);
@@ -162,6 +163,16 @@ function LoginFormContent() {
       <div style={{ maxWidth: "480px", width: "100%" }}>
         {/* Portal Header */}
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
+          <div style={{ marginBottom: "16px" }}>
+            <Image
+              src="/ekam-logo-full.png"
+              alt="EKAM — One Gateway. Connected Services."
+              width={200}
+              height={189}
+              priority
+              style={{ margin: "0 auto", height: "auto", maxWidth: "200px" }}
+            />
+          </div>
           <div
             style={{
               display: "inline-flex",
@@ -199,7 +210,7 @@ function LoginFormContent() {
               lineHeight: 1.5,
             }}
           >
-            Access My SETU, your unified Document Vault, active service journeys, and consent records.
+            Access My EKAM, your unified Document Vault, active service journeys, and consent records.
           </p>
         </div>
 
@@ -305,7 +316,7 @@ function LoginFormContent() {
                 fontWeight: 700,
               }}
             >
-              {submitting ? "Signing in..." : "Continue to My SETU →"}
+              {submitting ? "Signing in..." : "Continue to My EKAM →"}
             </button>
           </form>
 
@@ -457,7 +468,7 @@ function LoginFormContent() {
             href="/"
             style={{ color: "var(--setu-blue)", textDecoration: "none" }}
           >
-            ← Return to SETU Home
+            ← Return to EKAM Home
           </Link>
           <span style={{ margin: "0 10px", color: "var(--setu-border)" }}>•</span>
           <Link
@@ -486,7 +497,16 @@ export default function LoginPage() {
             justifyContent: "center",
           }}
         >
-          <div style={{ color: "var(--setu-slate)" }}>Loading Sign In...</div>
+          <div style={{ textAlign: "center", color: "var(--setu-slate)" }}>
+            <Image
+              src="/ekam-emblem.png"
+              alt="EKAM Loading"
+              width={48}
+              height={48}
+              style={{ margin: "0 auto 12px", height: "auto" }}
+            />
+            <div>Loading Sign In...</div>
+          </div>
         </main>
       }
     >

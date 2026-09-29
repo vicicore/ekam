@@ -24,7 +24,7 @@ export default function GrievanceDetailPage() {
       title: "Grievance registered",
       date: grievance ? new Date(grievance.created_at).toLocaleDateString() : "18 Sep 2026",
       state: "done",
-      text: "Acknowledgement number generated and grievance received by SETU.",
+      text: "Acknowledgement number generated and grievance received by EKAM.",
     },
     {
       title: "Department review",

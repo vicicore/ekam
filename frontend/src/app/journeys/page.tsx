@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ApiError, JourneySummaryView, journeyApi } from "@/lib/api";
 import { useAuth } from "@/lib/useAuth";
 import { useLanguage } from "@/lib/LanguageProvider";
@@ -55,16 +56,26 @@ export default function JourneysPage() {
           margin: "40px auto",
           boxShadow: "0 4px 20px rgba(16, 42, 67, 0.05)"
         }}>
+          <div style={{ marginBottom: "16px" }}>
+            <Image
+              src="/ekam-logo-full.png"
+              alt="EKAM — One Gateway. Connected Services."
+              width={180}
+              height={170}
+              priority
+              style={{ margin: "0 auto", height: "auto", maxWidth: "180px" }}
+            />
+          </div>
           <p className="setu-section-kicker">APPLICATION TRACKER</p>
           <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--setu-navy)", margin: "8px 0 12px 0" }}>
             Sign In to Track Your Services
           </h1>
           <p style={{ fontSize: "0.95rem", color: "var(--setu-slate)", margin: "0 auto 24px auto", maxWidth: "420px", lineHeight: 1.5 }}>
-            SETU connects multiple departments, providing real-time status, document verification, and statutory SLA tracking in one place.
+            EKAM connects multiple departments, providing real-time status, document verification, and statutory SLA tracking in one place.
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
             <Link href="/login?redirect=/journeys" className="setu-btn setu-btn-primary">
-              Log In to My SETU →
+              Log In to My EKAM →
             </Link>
             <Link href="/services" className="setu-btn setu-btn-secondary">
               Browse Services
@@ -148,7 +159,7 @@ export default function JourneysPage() {
               className="setu-journey-list-card"
             >
               <div className="setu-journey-card-main">
-                <div className="setu-journey-card-number">SETU</div>
+                <div className="setu-journey-card-number">EKAM</div>
                 <div>
                   <span className="setu-eyebrow">SERVICE JOURNEY</span>
                   <h2>{journey.life_event_title_en}</h2>

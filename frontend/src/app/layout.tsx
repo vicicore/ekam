@@ -13,8 +13,15 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SETU — Maharashtra Citizen Services Orchestration Platform",
-  description: "Seamless Exchange & Transformative Ubiquity: A unified, consent-aware citizen service experience for Maharashtra government services.",
+  title: "EKAM — One Gateway. Connected Services.",
+  description: "EKAM — An Integrated Citizen Service Orchestration Platform: A unified, consent-aware citizen service experience for Maharashtra government services.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

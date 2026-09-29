@@ -14,7 +14,7 @@ export default function AdminPage() {
     try {
       setMetrics(await adminApi.getMetrics(token ?? undefined));
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not reach the SETU backend API.");
+      setError(err instanceof ApiError ? err.message : "Could not reach the EKAM backend API.");
     }
   }, [token]);
 

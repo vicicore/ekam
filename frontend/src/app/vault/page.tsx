@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ApiError, DocumentView, citizenApi } from "@/lib/api";
 import { DOC_STATUS_CLASSES, DOC_STATUS_LABEL_KEY } from "@/lib/statusStyles";
 import { useAuth } from "@/lib/useAuth";
@@ -130,7 +131,7 @@ export default function VaultPage() {
       // Auto verify it through the backend verification path
       await citizenApi.submitDocumentForReview(citizenId, uploaded.id, token ?? undefined);
       await citizenApi.verifyDocument(citizenId, uploaded.id, token ?? undefined);
-      setSuccessMessage("Imported verified Identity Proof from DigiLocker into SETU Document Vault!");
+      setSuccessMessage("Imported verified Identity Proof from DigiLocker into EKAM Document Vault!");
       await load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "DigiLocker import failed");
@@ -159,12 +160,22 @@ export default function VaultPage() {
     return (
       <div className="setu-page-shell" style={{ width: "min(var(--setu-max), calc(100% - 32px))", margin: "0 auto", padding: "48px 0" }}>
         <div className="setu-panel" style={{ maxWidth: "600px", margin: "40px auto", textAlign: "center", padding: "40px 24px" }}>
+          <div style={{ marginBottom: "16px" }}>
+            <Image
+              src="/ekam-logo-full.png"
+              alt="EKAM — One Gateway. Connected Services."
+              width={180}
+              height={170}
+              priority
+              style={{ margin: "0 auto", height: "auto", maxWidth: "180px" }}
+            />
+          </div>
           <span className="setu-ink-kicker">SECURE CITIZEN REPOSITORY</span>
           <h1 style={{ fontSize: "1.8rem", color: "var(--setu-navy)", margin: "8px 0 12px" }}>
             Sign in to access your Document Vault
           </h1>
           <p className="setu-muted" style={{ margin: "0 0 24px", lineHeight: "1.6" }}>
-            The SETU Document Vault securely stores verified certificates and documents for reuse across all Maharashtra government services.
+            The EKAM Document Vault securely stores verified certificates and documents for reuse across all Maharashtra government services.
           </p>
           <Link href="/login?redirect=/vault" className="setu-btn setu-btn-primary">
             Sign In with Citizen ID
@@ -533,7 +544,7 @@ export default function VaultPage() {
 
       {/* Privacy Notice Banner */}
       <footer style={{ marginTop: "32px", padding: "16px", background: "#f8fafc", border: "1px solid var(--setu-line)", borderRadius: "var(--setu-radius)", fontSize: "0.78rem", color: "var(--setu-muted)", lineHeight: "1.5" }}>
-        <strong>Data Protection & Privacy Notice:</strong> Documents deposited in your SETU Document Vault are secured under state data confidentiality protocols. Credentials are never transmitted to external departments without your explicit per-service consent.
+        <strong>Data Protection & Privacy Notice:</strong> Documents deposited in your EKAM Document Vault are secured under state data confidentiality protocols. Credentials are never transmitted to external departments without your explicit per-service consent.
       </footer>
     </div>
   );

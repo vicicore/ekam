@@ -72,7 +72,7 @@ export default function ServiceDetailPage() {
         <div className="setu-panel" style={{ textAlign: "center", padding: "40px" }}>
           <h2>Service Not Found</h2>
           <p className="setu-muted">
-            The requested service &quot;{serviceId}&quot; could not be found in the current SETU directory.
+            The requested service &quot;{serviceId}&quot; could not be found in the current EKAM directory.
           </p>
           <Link href="/services" className="setu-btn setu-btn-primary">
             Return to Services Directory
@@ -205,7 +205,7 @@ export default function ServiceDetailPage() {
               {t("services_what_do_i_need")}
             </h2>
             <p className="setu-muted" style={{ margin: "0 0 16px", fontSize: "0.84rem" }}>
-              SETU principle: <strong>Enter/upload once, reuse where allowed.</strong> Check below to see which documents are already verified in your vault versus what is still required.
+              EKAM principle: <strong>Enter/upload once, reuse where allowed.</strong> Check below to see which documents are already verified in your vault versus what is still required.
             </p>
 
             {/* Structured Presentation: Available in Vault vs Still Required */}
@@ -223,7 +223,7 @@ export default function ServiceDetailPage() {
 
                 {documentPartition.available.length === 0 ? (
                   <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--setu-muted)" }}>
-                    {isLoggedIn ? "No matching verified documents found in your vault yet." : "Sign in to check documents already verified in your SETU Document Vault."}
+                    {isLoggedIn ? "No matching verified documents found in your vault yet." : "Sign in to check documents already verified in your EKAM Document Vault."}
                   </p>
                 ) : (
                   <ul className="setu-req-list" style={{ margin: 0, padding: 0 }}>
@@ -233,7 +233,7 @@ export default function ServiceDetailPage() {
                         <div>
                           <strong>{doc.name}</strong>
                           <span style={{ display: "block", fontSize: "0.75rem", color: "var(--setu-muted)" }}>
-                            Verified in SETU Vault · {doc.filename || "Attached credential"}
+                            Verified in EKAM Vault · {doc.filename || "Attached credential"}
                           </span>
                         </div>
                       </li>
@@ -342,7 +342,7 @@ export default function ServiceDetailPage() {
                 🔒 Explicit Data Consent Requirement:
               </strong>
               <p style={{ margin: "0 0 10px", fontSize: "0.8rem", color: "#334155", lineHeight: "1.5" }}>
-                Before submitting, SETU requests your explicit permission to share the following verified data with <strong>{service.consentDetails.recipient}</strong>:
+                Before submitting, EKAM requests your explicit permission to share the following verified data with <strong>{service.consentDetails.recipient}</strong>:
               </p>
               <div style={{ fontSize: "0.78rem", color: "#475569", display: "grid", gap: "4px" }}>
                 <div><strong>Data Shared:</strong> {service.consentDetails.dataShared}</div>
@@ -361,7 +361,7 @@ export default function ServiceDetailPage() {
               {t("services_start_journey_cta")}
             </h3>
             <p className="setu-muted" style={{ fontSize: "0.82rem", lineHeight: "1.55", margin: "0 0 16px" }}>
-              SETU will verify your profile, attach available vault credentials, and initiate time-bound processing under the Maharashtra RTS Act.
+              EKAM will verify your profile, attach available vault credentials, and initiate time-bound processing under the Maharashtra RTS Act.
             </p>
 
             {/* Consent Checkbox */}
@@ -400,10 +400,10 @@ export default function ServiceDetailPage() {
               Questions about this service?
             </strong>
             <p style={{ margin: "0 0 12px", fontSize: "0.8rem", color: "var(--setu-muted)", lineHeight: "1.5" }}>
-              Ask the SETU Assistant for grounded answers on deadlines, documents, or grievance escalation.
+              Ask the EKAM Assistant for grounded answers on deadlines, documents, or grievance escalation.
             </p>
             <Link href="/assistant" className="setu-btn setu-btn-secondary" style={{ width: "100%", fontSize: "0.8rem" }}>
-              Ask SETU Assistant
+              Ask EKAM Assistant
             </Link>
           </div>
         </aside>

@@ -82,7 +82,7 @@ export default function SchemeDetailPage() {
           <div className="setu-apply-card">
             <div className="setu-section-kicker">NEXT STEP</div>
             <h2>{t("schemes_continue_setu")}</h2>
-            <p>Use the service directory to locate the relevant application pathway, or initiate a connected journey directly through SETU.</p>
+            <p>Use the service directory to locate the relevant application pathway, or initiate a connected journey directly through EKAM.</p>
             {scheme.relatedLifeEvent ? (
               <button
                 type="button"

@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { assistantApi } from "@/lib/assistantApi";
 import { useLanguage } from "@/lib/LanguageProvider";
 import "./assistant.css";
@@ -24,7 +25,7 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      text: "Hello. I can help you navigate SETU services, schemes, documents, applications, grievances and Maharashtra service information.",
+      text: "Hello. I can help you navigate EKAM services, schemes, documents, applications, grievances and Maharashtra service information.",
     },
   ]);
 
@@ -80,7 +81,7 @@ export default function AssistantPage() {
     } catch {
       setMessages((m) => [
         ...m,
-        { role: "assistant", text: "The SETU Assistant is temporarily unavailable. Please use the service navigation directly." },
+        { role: "assistant", text: "The EKAM Assistant is temporarily unavailable. Please use the service navigation directly." },
       ]);
     } finally {
       setLoading(false);
@@ -90,9 +91,19 @@ export default function AssistantPage() {
   return (
     <main className="assistant-page">
       <section className="assistant-shell">
-        {/* 1. SETU Assistant Header / Introduction */}
-        <header className="assistant-header">
-          <span className="assistant-kicker">SETU ASSISTANT</span>
+        {/* 1. EKAM Assistant Header / Introduction */}
+        <header className="assistant-header" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+            <Image
+              src="/ekam-emblem.png"
+              alt="EKAM Emblem"
+              width={36}
+              height={36}
+              priority
+              style={{ width: "36px", height: "36px", objectFit: "contain" }}
+            />
+            <span className="assistant-kicker">EKAM ASSISTANT</span>
+          </div>
           <h1 className="assistant-title">{t("qa_assistant_title")}</h1>
           <p className="assistant-intro">{t("assistant_hero_desc")}</p>
         </header>
@@ -102,7 +113,7 @@ export default function AssistantPage() {
           {messages.map((message, index) => (
             <div className={`assistant-message ${message.role}`} key={`${message.role}-${index}`}>
               <div className="assistant-message__role">
-                {message.role === "assistant" ? "SETU Assistant" : "You"}
+                {message.role === "assistant" ? "EKAM Assistant" : "You"}
               </div>
               <div className="assistant-message__text">{message.text}</div>
 
@@ -127,7 +138,7 @@ export default function AssistantPage() {
             </div>
           ))}
 
-          {loading && <div className="assistant-typing">SETU is checking its knowledge base…</div>}
+          {loading && <div className="assistant-typing">EKAM is checking its knowledge base…</div>}
         </div>
 
         {/* 3. Primary Input Area (Below Response) */}
@@ -146,7 +157,7 @@ export default function AssistantPage() {
               onFocus={() => setShowSuggestions(true)}
               onClick={() => setShowSuggestions(true)}
               placeholder={t("assistant_placeholder")}
-              aria-label="Ask SETU Assistant"
+              aria-label="Ask EKAM Assistant"
             />
             <button type="submit" disabled={loading || !input.trim()}>
               {loading ? t("loading") : t("assistant_ask_btn")}
@@ -177,7 +188,7 @@ export default function AssistantPage() {
 
         {/* 5. Grounded Advisory Notice */}
         <div className="assistant-notice">
-          SETU Assistant answers are grounded only in the configured SETU
+          EKAM Assistant answers are grounded only in the configured EKAM
           knowledge base. Always verify eligibility, official requirements and
           deadlines with the relevant authoritative government source before
           acting.

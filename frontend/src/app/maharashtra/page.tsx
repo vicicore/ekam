@@ -53,7 +53,7 @@ export default function MaharashtraPage() {
           <h1>One State. One Access Point.</h1>
           <p>
             Explore citizen services across 36 districts, 6 administrative divisions and state-wide departments.
-            SETU brings Maharashtra's public service architecture into a single, cohesive citizen portal.
+            EKAM brings Maharashtra's public service architecture into a single, cohesive citizen portal.
           </p>
           <div style={{ marginTop: "16px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <Link href="/maharashtra/intelligence" className="setu-btn setu-btn-primary">
@@ -201,7 +201,7 @@ export default function MaharashtraPage() {
           <p className="setu-eyebrow">RIGHT TO PUBLIC SERVICES</p>
           <h2>Track services with clear responsibility and timelines.</h2>
           <p>
-            SETU can surface service timelines, application references and
+            EKAM can surface service timelines, application references and
             escalation information alongside each eligible service.
           </p>
         </div>

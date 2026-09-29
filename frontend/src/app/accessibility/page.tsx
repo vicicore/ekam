@@ -6,10 +6,10 @@ export default function AccessibilityPage() {
   return (
     <main id="main-content" className="setu-accessibility-page">
       <section className="setu-accessibility-hero">
-        <span className="setu-eyebrow">SETU · ACCESSIBILITY</span>
+        <span className="setu-eyebrow">EKAM · ACCESSIBILITY</span>
         <h1>Services designed for more citizens.</h1>
         <p>
-          SETU's interface supports keyboard navigation, readable text,
+          EKAM's interface supports keyboard navigation, readable text,
           responsive layouts, reduced motion and accessibility preferences.
         </p>
         <AccessibilityToolbar />

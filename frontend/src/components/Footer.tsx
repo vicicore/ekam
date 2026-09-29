@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/lib/LanguageProvider";
 
 export default function Footer() {
@@ -12,33 +13,37 @@ export default function Footer() {
         <div className="setu-footer-grid">
           {/* Brand & Purpose */}
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "14px" }}>
               <div
                 style={{
-                  width: "36px",
-                  height: "36px",
-                  background: "var(--setu-blue)",
-                  color: "#fff",
-                  display: "grid",
-                  placeItems: "center",
-                  fontWeight: 900,
-                  fontSize: "1.1rem",
-                  borderBottom: "3px solid #e4a23b",
+                  background: "#ffffff",
+                  padding: "8px 12px",
+                  borderRadius: "8px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  width: "fit-content",
+                  maxWidth: "220px",
                 }}
               >
-                S
+                <Image
+                  src="/ekam-logo-full.png"
+                  alt="EKAM — One Gateway. Connected Services."
+                  width={200}
+                  height={189}
+                  style={{ width: "100%", height: "auto", objectFit: "contain" }}
+                />
               </div>
               <div>
-                <strong style={{ fontSize: "1.15rem", letterSpacing: "0.06em", color: "#ffffff" }}>
-                  SETU
+                <strong style={{ fontSize: "1.15rem", letterSpacing: "0.06em", color: "#ffffff", display: "block" }}>
+                  EKAM
                 </strong>
-                <small style={{ display: "block", color: "#9fb5c8", fontSize: "0.7rem", letterSpacing: "0.04em" }}>
-                  Seamless Exchange & Transformative Ubiquity
+                <small style={{ display: "block", color: "#9fb5c8", fontSize: "0.72rem", letterSpacing: "0.04em" }}>
+                  One Gateway. Connected Services.
                 </small>
               </div>
             </div>
             <p style={{ fontSize: "0.82rem", lineHeight: "1.65", color: "#c5d7e5", maxWidth: "420px" }}>
-              A citizen-centric government-service orchestration platform for Maharashtra.
+              <strong>EKAM — An Integrated Citizen Service Orchestration Platform</strong> for Maharashtra.
               Built on the principle of <strong>Goal Before Department</strong>: enter details once, verify documents once, and track complete cross-department journeys in one place.
             </p>
             <div style={{ marginTop: "14px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -92,18 +97,18 @@ export default function Footer() {
         <div className="setu-footer-note">
           <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
             <div>
-              © 2026 Government of Maharashtra · SETU Citizen Service Orchestration Layer
+              © 2026 Government of Maharashtra · EKAM Citizen Service Orchestration Layer
             </div>
             <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
               <Link href="/accessibility">Accessibility Statement</Link>
               <span>·</span>
               <Link href="/grievance">Grievance Redressal</Link>
               <span>·</span>
-              <Link href="/assistant">SETU Assistant</Link>
+              <Link href="/assistant">EKAM Assistant</Link>
             </div>
           </div>
           <p style={{ marginTop: "10px", fontSize: "0.72rem", color: "#8ea3b4", lineHeight: "1.5" }}>
-            <strong>Demo & Prototype Boundary:</strong> SETU is an integration-ready citizen service orchestration prototype prepared for Smart India Hackathon (SIH 2026). Departmental adapters, service datasets, and metadata are for demonstration and navigation purposes. Official statutory rules and service eligibility must be validated against authoritative department sources.
+            <strong>Demo & Prototype Boundary:</strong> EKAM is an integration-ready citizen service orchestration prototype prepared for Smart India Hackathon (SIH 2026). Departmental adapters, service datasets, and metadata are for demonstration and navigation purposes. Official statutory rules and service eligibility must be validated against authoritative department sources.
           </p>
         </div>
       </div>

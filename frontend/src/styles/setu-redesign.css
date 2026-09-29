@@ -94,15 +94,14 @@ body {
   min-width: 0;
 }
 
-.setu-brand-mark {
+.setu-brand-mark,
+.ekam-navbar-emblem {
   width: 40px;
   height: 40px;
-  display: grid;
-  place-items: center;
-  background: var(--setu-blue);
-  color: #fff;
-  font-weight: 800;
-  border-bottom: 3px solid #e4a23b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
   flex: none;
 }
 
@@ -537,6 +536,98 @@ body {
   font-size: 0.78rem;
   cursor: pointer;
 }
+
+/* EKAM Official Brand Showcase in Hero */
+.ekam-hero-container {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.ekam-hero-content {
+  min-width: 0;
+}
+
+.ekam-hero-brand-showcase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ekam-hero-logo-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 24px 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ekam-hero-logo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.42);
+}
+
+.ekam-hero-logo-img {
+  width: 250px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.ekam-hero-card-meta {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+.ekam-badge-pill {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--setu-navy, #0f284e);
+  background: #edf4fa;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+}
+
+.ekam-card-tagline {
+  font-size: 0.74rem;
+  color: #334155;
+  margin: 8px 0 0;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .ekam-hero-container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .ekam-hero-brand-showcase {
+    order: -1;
+    justify-content: flex-start;
+  }
+  .ekam-hero-logo-card {
+    max-width: 260px;
+    padding: 18px 16px 14px;
+  }
+  .ekam-hero-logo-img {
+    width: 200px;
+  }
+}
+
 .setu-section-block { padding: 48px 0; }
 .setu-section-head {
   display: flex;
@@ -823,6 +914,8 @@ body {
   .setu-utility-left span:nth-child(n+2) { display: none; }
   .setu-digilocker, .setu-section-head { flex-direction: column; align-items: stretch; }
   .setu-btn, .setu-button { width: 100%; }
+  .setu-brand small { display: none; }
+  .setu-brand strong { font-size: 1.15rem; }
 }
 
 /* ==========================================================================

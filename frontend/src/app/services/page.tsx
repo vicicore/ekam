@@ -312,7 +312,7 @@ export default function ServicesPage() {
       fallback={
         <div className="setu-container" style={{ padding: "60px 0", textAlign: "center" }}>
           <div className="setu-loading-spinner" />
-          <p style={{ marginTop: "16px", color: "var(--setu-slate)" }}>Loading SETU Services Directory…</p>
+          <p style={{ marginTop: "16px", color: "var(--setu-slate)" }}>Loading EKAM Services Directory…</p>
         </div>
       }
     >

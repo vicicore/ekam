@@ -15,7 +15,7 @@ export default function DemoPage() {
         <span className="inline-block rounded-full border border-orange-300 bg-orange-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
           Judge mode — simulation, not live government data
         </span>
-        <h1 className="mt-4 text-3xl font-bold text-slate-900">SETU Judge Demo</h1>
+        <h1 className="mt-4 text-3xl font-bold text-slate-900">EKAM Judge Demo</h1>
         <p className="mt-2 max-w-2xl text-slate-600">
           Two real orchestrated journeys, driving actual backend state — not a presentation
           animation. Every control below calls the FastAPI backend.

@@ -8,7 +8,7 @@ export type RequiredDoc = {
 export type ProcessStep = {
   stepNumber: number;
   title: string;
-  actor: "Citizen" | "SETU Orchestrator" | "Department" | "DigiLocker / Vault";
+  actor: "Citizen" | "EKAM Orchestrator" | "EKAM Orchestrator" | "Department" | "DigiLocker / Vault";
   description: string;
 };
 
@@ -50,7 +50,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       "No conflicting income certificate issued for the same financial period"
     ],
     prerequisites: [
-      "Verified identity proof in SETU Document Vault or DigiLocker",
+      "Verified identity proof in EKAM Document Vault or DigiLocker",
       "Verified address proof in Maharashtra"
     ],
     requiredDocuments: [
@@ -59,10 +59,10 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "income_certificate", name: "Income Proof / Declaration", description: "Salary slips, Form 16, or Talathi Income Verification Report", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Vault & Eligibility Check", actor: "SETU Orchestrator", description: "Verifies existing documents in citizen vault to eliminate redundant submissions." },
+      { stepNumber: 1, title: "Vault & Eligibility Check", actor: "EKAM Orchestrator", description: "Verifies existing documents in citizen vault to eliminate redundant submissions." },
       { stepNumber: 2, title: "Explicit Citizen Consent", actor: "Citizen", description: "Citizen reviews and authorizes sharing of vault records with the Revenue Department." },
       { stepNumber: 3, title: "Tahsildar Scrutiny & Field Report", actor: "Department", description: "Revenue officer verifies annual earnings against local records." },
-      { stepNumber: 4, title: "Digitally Signed Certificate", actor: "Department", description: "Signed certificate issued and auto-deposited into citizen's SETU Document Vault." }
+      { stepNumber: 4, title: "Digitally Signed Certificate", actor: "Department", description: "Signed certificate issued and auto-deposited into citizen's EKAM Document Vault." }
     ],
     consentDetails: {
       dataShared: "Citizen Full Name, Residential Address, Family Member Count, Declared Annual Income",
@@ -89,14 +89,14 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
     ],
     prerequisites: [
       "Continuous proof of residence for 15 years",
-      "Valid Identity Proof in SETU Vault"
+      "Valid Identity Proof in EKAM Vault"
     ],
     requiredDocuments: [
       { docType: "identity_verification", name: "Identity Proof", description: "Aadhaar Card / Voter ID / Passport", mandatory: true },
       { docType: "domicile_certificate", name: "15-Year Residence Evidence", description: "School Leaving Certificate, Electricity Bills, or Property Tax receipts", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Digital Verification", actor: "SETU Orchestrator", description: "Validates stored address credentials." },
+      { stepNumber: 1, title: "Digital Verification", actor: "EKAM Orchestrator", description: "Validates stored address credentials." },
       { stepNumber: 2, title: "Citizen Consent", actor: "Citizen", description: "Authorizes Revenue Department verification." },
       { stepNumber: 3, title: "SDO / Executive Magistrate Verification", actor: "Department", description: "Verification of 15-year residency records." },
       { stepNumber: 4, title: "Issuance", actor: "Department", description: "Digitally signed Domicile Certificate issued to citizen vault." }
@@ -134,7 +134,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "caste_certificate", name: "Ancestral Caste Proof", description: "Father's or grandfather's school leaving certificate with caste mentioned", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Document Vault Screening", actor: "SETU Orchestrator", description: "Checks available lineage and identity documents in vault." },
+      { stepNumber: 1, title: "Document Vault Screening", actor: "EKAM Orchestrator", description: "Checks available lineage and identity documents in vault." },
       { stepNumber: 2, title: "Explicit Consent", actor: "Citizen", description: "Consent to transmit genealogy details to Social Justice authority." },
       { stepNumber: 3, title: "Scrutiny by Competent Authority", actor: "Department", description: "Sub-Divisional Officer verifies records against district archives." },
       { stepNumber: 4, title: "Certificate Issuance", actor: "Department", description: "Caste Certificate issued with barcode and digital signature." }
@@ -164,8 +164,8 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       "Regular attendance and passing marks in qualifying exam"
     ],
     prerequisites: [
-      "Verified Income Certificate in SETU Vault",
-      "Verified Domicile Certificate in SETU Vault",
+      "Verified Income Certificate in EKAM Vault",
+      "Verified Domicile Certificate in EKAM Vault",
       "Verified Identity Credentials"
     ],
     requiredDocuments: [
@@ -174,7 +174,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "income_certificate", name: "Income Certificate", description: "Current financial year verified income certificate", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Multi-Department Prerequisite Check", actor: "SETU Orchestrator", description: "Reuses verified income and domicile records from Revenue Department." },
+      { stepNumber: 1, title: "Multi-Department Prerequisite Check", actor: "EKAM Orchestrator", description: "Reuses verified income and domicile records from Revenue Department." },
       { stepNumber: 2, title: "Citizen Authorization", actor: "Citizen", description: "Grants explicit consent to transfer credentials to Higher Education." },
       { stepNumber: 3, title: "College & Directorate Verification", actor: "Department", description: "Institutional scrutiny of enrollment and fee status." },
       { stepNumber: 4, title: "Sanction & Disbursal", actor: "Department", description: "Direct Benefit Transfer (DBT) to linked account and fee remission." }
@@ -206,7 +206,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "identity_verification", name: "Student ID Proof", description: "Institution issued identification card", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Verification", actor: "SETU Orchestrator", description: "Checks student credentials against institutional registry." },
+      { stepNumber: 1, title: "Verification", actor: "EKAM Orchestrator", description: "Checks student credentials against institutional registry." },
       { stepNumber: 2, title: "Endorsement", actor: "Department", description: "Principal / Registrar digital endorsement." },
       { stepNumber: 3, title: "Issuance", actor: "Department", description: "Certificate added to citizen vault." }
     ],
@@ -239,7 +239,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "business_registration", name: "Premises Ownership / Lease", description: "Registered Rent Agreement or Municipal Tax receipt", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Profile Reuse", actor: "SETU Orchestrator", description: "Loads citizen identity and location details from SETU profile." },
+      { stepNumber: 1, title: "Profile Reuse", actor: "EKAM Orchestrator", description: "Loads citizen identity and location details from EKAM profile." },
       { stepNumber: 2, title: "Citizen Consent", actor: "Citizen", description: "Explicit consent to forward registration intimation to Labour Department." },
       { stepNumber: 3, title: "Labour Officer Intimation Review", actor: "Department", description: "Automated scrutiny and compliance check." },
       { stepNumber: 4, title: "Registration Certificate (Form F)", actor: "Department", description: "Official Registration Certificate issued to Document Vault." }
@@ -273,7 +273,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "domicile_certificate", name: "Age & Address Proof", description: "Voter ID or Domicile proof", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Vault Document Check", actor: "SETU Orchestrator", description: "Matches identity and address proof." },
+      { stepNumber: 1, title: "Vault Document Check", actor: "EKAM Orchestrator", description: "Matches identity and address proof." },
       { stepNumber: 2, title: "Board Review", actor: "Department", description: "BOCW Welfare Officer verifies 90-day certificate." },
       { stepNumber: 3, title: "Smart Card Issuance", actor: "Department", description: "Issuance of Welfare Smart Card." }
     ],
@@ -300,13 +300,13 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       "Valid Shop & Establishment Registration or application reference",
       "Compliance with fire and health safety guidelines"
     ],
-    prerequisites: ["Active Shop & Establishment Registration in SETU Journey"],
+    prerequisites: ["Active Shop & Establishment Registration in EKAM Journey"],
     requiredDocuments: [
       { docType: "identity_verification", name: "Owner Identity", description: "Aadhaar / PAN", mandatory: true },
       { docType: "business_registration", name: "Shop Registration Reference", description: "Form F from Labour Department", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Cross-Department Handoff", actor: "SETU Orchestrator", description: "Pipes verified Shop Registration from Labour Department to Municipal Corporation." },
+      { stepNumber: 1, title: "Cross-Department Handoff", actor: "EKAM Orchestrator", description: "Pipes verified Shop Registration from Labour Department to Municipal Corporation." },
       { stepNumber: 2, title: "Citizen Consent", actor: "Citizen", description: "Authorizes sharing of premises blueprints and trade category." },
       { stepNumber: 3, title: "Health & Fire Desk Clearance", actor: "Department", description: "Ward officer scrutiny." },
       { stepNumber: 4, title: "NOC Issued", actor: "Department", description: "Digitally authenticated NOC deposited in vault." }
@@ -340,7 +340,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "business_registration", name: "Property Ownership Records", description: "Property Card (City Survey) or 7/12 Extract", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Blueprint Scrutiny", actor: "SETU Orchestrator", description: "Coordinates with municipal Auto-DCR portal." },
+      { stepNumber: 1, title: "Blueprint Scrutiny", actor: "EKAM Orchestrator", description: "Coordinates with municipal Auto-DCR portal." },
       { stepNumber: 2, title: "Town Planning Review", actor: "Department", description: "Town planning officer technical assessment." },
       { stepNumber: 3, title: "Commencement Certificate", actor: "Department", description: "Approved sanction plan issued to citizen." }
     ],
@@ -371,10 +371,10 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "identity_verification", name: "Citizen Identity", description: "Aadhaar Card", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Query Land Database", actor: "SETU Orchestrator", description: "Fetches live Mahabhumi revenue parcel data." },
+      { stepNumber: 1, title: "Query Land Database", actor: "EKAM Orchestrator", description: "Fetches live Mahabhumi revenue parcel data." },
       { stepNumber: 2, title: "Citizen Selection", actor: "Citizen", description: "Confirms landholder name and survey details." },
       { stepNumber: 3, title: "Digital Signature Verification", actor: "Department", description: "Automated Talathi digital key verification." },
-      { stepNumber: 4, title: "Instant Vault Delivery", actor: "SETU Orchestrator", description: "7/12 extract saved into Document Vault for lifetime reuse." }
+      { stepNumber: 4, title: "Instant Vault Delivery", actor: "EKAM Orchestrator", description: "7/12 extract saved into Document Vault for lifetime reuse." }
     ],
     consentDetails: {
       dataShared: "Citizen Name, Mobile Number, Land Parcel Survey Information",
@@ -406,7 +406,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "income_certificate", name: "Income Certificate", description: "Revenue department verified income certificate", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Eligibility Assessment", actor: "SETU Orchestrator", description: "Cross-checks vault certificates against pension criteria." },
+      { stepNumber: 1, title: "Eligibility Assessment", actor: "EKAM Orchestrator", description: "Cross-checks vault certificates against pension criteria." },
       { stepNumber: 2, title: "Citizen Consent", actor: "Citizen", description: "Consents to direct DBT bank integration." },
       { stepNumber: 3, title: "Tahsildar Sanction Committee", actor: "Department", description: "District committee approves monthly pension benefit." },
       { stepNumber: 4, title: "DBT Activation", actor: "Department", description: "Monthly support initiated to citizen's verified bank account." }
@@ -439,7 +439,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "domicile_certificate", name: "Address Proof", description: "Electricity bill, ration card or domicile", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Instant Age Verification", actor: "SETU Orchestrator", description: "Derives verified date of birth from citizen vault profile." },
+      { stepNumber: 1, title: "Instant Age Verification", actor: "EKAM Orchestrator", description: "Derives verified date of birth from citizen vault profile." },
       { stepNumber: 2, title: "Social Welfare Desk Endorsement", actor: "Department", description: "Officer reviews credentials." },
       { stepNumber: 3, title: "Digital Senior Card", actor: "Department", description: "Official card issued with QR verification." }
     ],
@@ -473,7 +473,7 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "income_certificate", name: "Income Certificate", description: "Annual income certificate", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "UDID & Vault Matching", actor: "SETU Orchestrator", description: "Links disability credentials with citizen vault." },
+      { stepNumber: 1, title: "UDID & Vault Matching", actor: "EKAM Orchestrator", description: "Links disability credentials with citizen vault." },
       { stepNumber: 2, title: "Equipment Application", actor: "Citizen", description: "Citizen chooses needed assistive aid or scheme benefit." },
       { stepNumber: 3, title: "District Divyang Welfare Committee", actor: "Department", description: "Medical scrutiny and equipment allocation." },
       { stepNumber: 4, title: "Distribution & Delivery", actor: "Department", description: "Disbursal through district social welfare center." }
@@ -502,10 +502,10 @@ export const SERVICE_CATALOG: ServiceRecord[] = [
       { docType: "identity_verification", name: "Payer Identity", description: "Aadhaar or PAN", mandatory: true }
     ],
     processSteps: [
-      { stepNumber: 1, title: "Service Fee Calculation", actor: "SETU Orchestrator", description: "Computes exact departmental treasury head fee." },
+      { stepNumber: 1, title: "Service Fee Calculation", actor: "EKAM Orchestrator", description: "Computes exact departmental treasury head fee." },
       { stepNumber: 2, title: "Payment Gateway Integration", actor: "Citizen", description: "Payment through UPI, Netbanking, or Debit Card." },
       { stepNumber: 3, title: "Treasury Real-time Accounting", actor: "Department", description: "GRAS challan generation and treasury receipt." },
-      { stepNumber: 4, title: "Vault Handoff", actor: "SETU Orchestrator", description: "Challan receipt automatically attached to active journey." }
+      { stepNumber: 4, title: "Vault Handoff", actor: "EKAM Orchestrator", description: "Challan receipt automatically attached to active journey." }
     ],
     consentDetails: {
       dataShared: "Payer Name, Contact Number, Challan Amount, Department Head Code",
