@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageProvider";
 import { useAuth } from "@/lib/useAuth";
@@ -57,62 +56,40 @@ export default function Home() {
       {/* 1. Hero + Goal-Based Service Discovery */}
       <section className="setu-home-hero" aria-labelledby="hero-title">
         <div className="setu-wrap">
-          <div className="ekam-hero-container">
-            <div className="ekam-hero-content">
-              <div className="setu-kicker">{t("hero_kicker")}</div>
-              <h1 id="hero-title">{t("hero_title")}</h1>
-              <p>{t("hero_lede")}</p>
+          <div className="setu-kicker">{t("hero_kicker")}</div>
+          <h1 id="hero-title">{t("hero_title")}</h1>
+          <p>{t("hero_lede")}</p>
 
-              {/* Goal Search Input */}
-              <form className="setu-goal-form" onSubmit={handleGoalSubmit} role="search">
-                <label htmlFor="goal-input" className="sr-only">{t("hero_title")}</label>
-                <input
-                  id="goal-input"
-                  type="text"
-                  value={goalQuery}
-                  onChange={(e) => setGoalQuery(e.target.value)}
-                  placeholder={t("hero_placeholder")}
-                  aria-label={t("hero_title")}
-                />
-                <button type="submit" className="setu-btn setu-btn-primary">
-                  {t("hero_cta")}
-                </button>
-              </form>
+          {/* Goal Search Input */}
+          <form className="setu-goal-form" onSubmit={handleGoalSubmit} role="search">
+            <label htmlFor="goal-input" className="sr-only">{t("hero_title")}</label>
+            <input
+              id="goal-input"
+              type="text"
+              value={goalQuery}
+              onChange={(e) => setGoalQuery(e.target.value)}
+              placeholder={t("hero_placeholder")}
+              aria-label={t("hero_title")}
+            />
+            <button type="submit" className="setu-btn setu-btn-primary">
+              {t("hero_cta")}
+            </button>
+          </form>
 
-              {/* Goal Examples */}
-              <div className="setu-goal-examples" aria-label={t("suggested_goals")}>
-                <span style={{ fontSize: "0.76rem", color: "#f2c36d", fontWeight: 700, alignSelf: "center", marginRight: "4px" }}>
-                  {t("suggested_goals")}
-                </span>
-                {goalExamples.map((ex) => (
-                  <button
-                    type="button"
-                    key={ex.label}
-                    onClick={() => handleSelectGoal(ex)}
-                  >
-                    {ex.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Official Full EKAM Logo Showcase Card */}
-            <div className="ekam-hero-brand-showcase">
-              <div className="ekam-hero-logo-card">
-                <Image
-                  src="/ekam-logo-full.png"
-                  alt="EKAM — One Gateway. Connected Services."
-                  width={300}
-                  height={283}
-                  priority
-                  className="ekam-hero-logo-img"
-                />
-                <div className="ekam-hero-card-meta">
-                  <span className="ekam-badge-pill">Official Identity · SIH 2026</span>
-                  <p className="ekam-card-tagline">EKAM — An Integrated Citizen Service Orchestration Platform</p>
-                </div>
-              </div>
-            </div>
+          {/* Goal Examples */}
+          <div className="setu-goal-examples" aria-label={t("suggested_goals")}>
+            <span style={{ fontSize: "0.76rem", color: "#f2c36d", fontWeight: 700, alignSelf: "center", marginRight: "4px" }}>
+              {t("suggested_goals")}
+            </span>
+            {goalExamples.map((ex) => (
+              <button
+                type="button"
+                key={ex.label}
+                onClick={() => handleSelectGoal(ex)}
+              >
+                {ex.label}
+              </button>
+            ))}
           </div>
         </div>
       </section>
@@ -150,16 +127,7 @@ export default function Home() {
         <div className="setu-wrap">
           <div className="setu-preview-grid">
             <div className="setu-panel">
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
-                <Image
-                  src="/ekam-emblem.png"
-                  alt="EKAM Emblem"
-                  width={28}
-                  height={28}
-                  style={{ width: "28px", height: "28px", objectFit: "contain" }}
-                />
-                <span className="setu-ink-kicker">{t("my_setu_kicker")}</span>
-              </div>
+              <span className="setu-ink-kicker">{t("my_setu_kicker")}</span>
               <h3 id="my-setu-preview-heading">{t("my_setu_preview_title")}</h3>
               <p className="setu-muted">
                 {t("my_setu_preview_desc")}
@@ -191,14 +159,10 @@ export default function Home() {
               ) : (
                 <div>
                   <div style={{ margin: "16px 0", padding: "14px", background: "#ffffff", border: "1px dashed var(--setu-line)", borderRadius: "var(--setu-radius)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <Image
-                        src="/ekam-emblem.png"
-                        alt="EKAM Emblem"
-                        width={36}
-                        height={36}
-                        style={{ width: "36px", height: "36px", objectFit: "contain", flexShrink: 0 }}
-                      />
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#e2ecf5", color: "var(--setu-blue)", display: "grid", placeItems: "center", fontWeight: 800 }}>
+                        !
+                      </div>
                       <div>
                         <strong>{t("signin_prompt")}</strong>
                         <p style={{ margin: "2px 0 0", fontSize: "0.78rem", color: "var(--setu-muted)" }}>

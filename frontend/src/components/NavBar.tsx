@@ -80,16 +80,16 @@ export function NavBar() {
         {/* Brand */}
         <Link href="/" className="setu-brand" onClick={() => setMobileOpen(false)}>
           <Image
-            src="/ekam-emblem.png"
-            alt="EKAM Emblem"
-            width={40}
-            height={40}
+            src="/ekam-official-logo.png"
+            alt="एकम — सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी"
+            width={52}
+            height={52}
             priority
-            style={{ width: "40px", height: "40px", objectFit: "contain", flexShrink: 0 }}
+            style={{ width: "auto", height: "52px", objectFit: "contain", flexShrink: 0 }}
           />
           <div>
-            <strong>EKAM</strong>
-            <small>One Gateway. Connected Services.</small>
+            <strong>एकम</strong>
+            <small>सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी</small>
           </div>
         </Link>
 

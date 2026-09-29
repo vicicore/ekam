@@ -95,12 +95,12 @@ export default function AssistantPage() {
         <header className="assistant-header" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
             <Image
-              src="/ekam-emblem.png"
-              alt="EKAM Emblem"
-              width={36}
-              height={36}
+              src="/ekam-official-logo.png"
+              alt="एकम"
+              width={48}
+              height={48}
               priority
-              style={{ width: "36px", height: "36px", objectFit: "contain" }}
+              style={{ width: "auto", height: "48px", objectFit: "contain" }}
             />
             <span className="assistant-kicker">EKAM ASSISTANT</span>
           </div>

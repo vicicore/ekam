@@ -177,10 +177,10 @@ export default function ProfilePage() {
         <section className="setu-panel" style={{ maxWidth: "580px", margin: "40px auto", textAlign: "center", padding: "40px 24px" }}>
           <div style={{ marginBottom: "16px" }}>
             <Image
-              src="/ekam-logo-full.png"
-              alt="EKAM — One Gateway. Connected Services."
+              src="/ekam-official-logo.png"
+              alt="एकम — सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी"
               width={180}
-              height={170}
+              height={180}
               priority
               style={{ margin: "0 auto", height: "auto", maxWidth: "180px" }}
             />
@@ -208,12 +208,12 @@ export default function ProfilePage() {
       <header className="setu-dashboard-header" style={{ marginBottom: "24px" }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
           <Image
-            src="/ekam-emblem.png"
-            alt="EKAM Emblem"
-            width={44}
-            height={44}
+            src="/ekam-official-logo.png"
+            alt="एकम"
+            width={52}
+            height={52}
             priority
-            style={{ width: "44px", height: "44px", objectFit: "contain", flexShrink: 0, marginTop: "4px" }}
+            style={{ width: "auto", height: "52px", objectFit: "contain", flexShrink: 0, marginTop: "4px" }}
           />
           <div>
             <span className="setu-ink-kicker">MAHARASHTRA CITIZEN ACTION CENTER</span>

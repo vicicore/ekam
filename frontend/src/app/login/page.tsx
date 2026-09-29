@@ -165,10 +165,10 @@ function LoginFormContent() {
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
           <div style={{ marginBottom: "16px" }}>
             <Image
-              src="/ekam-logo-full.png"
-              alt="EKAM — One Gateway. Connected Services."
+              src="/ekam-official-logo.png"
+              alt="एकम — सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी"
               width={200}
-              height={189}
+              height={200}
               priority
               style={{ margin: "0 auto", height: "auto", maxWidth: "200px" }}
             />
@@ -499,11 +499,11 @@ export default function LoginPage() {
         >
           <div style={{ textAlign: "center", color: "var(--setu-slate)" }}>
             <Image
-              src="/ekam-emblem.png"
-              alt="EKAM Loading"
-              width={48}
-              height={48}
-              style={{ margin: "0 auto 12px", height: "auto" }}
+              src="/ekam-official-logo.png"
+              alt="एकम Loading"
+              width={56}
+              height={56}
+              style={{ margin: "0 auto 12px", height: "auto", width: "56px" }}
             />
             <div>Loading Sign In...</div>
           </div>

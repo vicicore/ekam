@@ -13,8 +13,8 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EKAM — One Gateway. Connected Services.",
-  description: "EKAM — An Integrated Citizen Service Orchestration Platform: A unified, consent-aware citizen service experience for Maharashtra government services.",
+  title: "एकम — सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी",
+  description: "एकम — सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी: Maharashtra Citizen Service Orchestration Platform",
   icons: {
     icon: [
       { url: "/favicon.ico" },

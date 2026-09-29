@@ -162,10 +162,10 @@ export default function VaultPage() {
         <div className="setu-panel" style={{ maxWidth: "600px", margin: "40px auto", textAlign: "center", padding: "40px 24px" }}>
           <div style={{ marginBottom: "16px" }}>
             <Image
-              src="/ekam-logo-full.png"
-              alt="EKAM — One Gateway. Connected Services."
+              src="/ekam-official-logo.png"
+              alt="एकम — सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी"
               width={180}
-              height={170}
+              height={180}
               priority
               style={{ margin: "0 auto", height: "auto", maxWidth: "180px" }}
             />

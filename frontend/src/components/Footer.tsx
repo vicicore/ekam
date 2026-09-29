@@ -13,37 +13,40 @@ export default function Footer() {
         <div className="setu-footer-grid">
           {/* Brand & Purpose */}
           <div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "14px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "14px" }}>
               <div
                 style={{
                   background: "#ffffff",
-                  padding: "8px 12px",
-                  borderRadius: "8px",
+                  borderRadius: "10px",
+                  padding: "5px",
                   display: "inline-flex",
                   alignItems: "center",
-                  width: "fit-content",
-                  maxWidth: "220px",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  width: "50px",
+                  height: "50px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
                 }}
               >
                 <Image
-                  src="/ekam-logo-full.png"
-                  alt="EKAM — One Gateway. Connected Services."
-                  width={200}
-                  height={189}
-                  style={{ width: "100%", height: "auto", objectFit: "contain" }}
+                  src="/ekam-official-emblem.png"
+                  alt="एकम"
+                  width={40}
+                  height={40}
+                  style={{ width: "40px", height: "40px", objectFit: "contain" }}
                 />
               </div>
               <div>
-                <strong style={{ fontSize: "1.15rem", letterSpacing: "0.06em", color: "#ffffff", display: "block" }}>
-                  EKAM
+                <strong style={{ fontSize: "1.3rem", letterSpacing: "0.04em", color: "#ffffff", display: "block" }}>
+                  एकम
                 </strong>
-                <small style={{ display: "block", color: "#9fb5c8", fontSize: "0.72rem", letterSpacing: "0.04em" }}>
-                  One Gateway. Connected Services.
+                <small style={{ display: "block", color: "#9fb5c8", fontSize: "0.72rem", letterSpacing: "0.02em" }}>
+                  सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी
                 </small>
               </div>
             </div>
             <p style={{ fontSize: "0.82rem", lineHeight: "1.65", color: "#c5d7e5", maxWidth: "420px" }}>
-              <strong>EKAM — An Integrated Citizen Service Orchestration Platform</strong> for Maharashtra.
+              <strong>एकम — सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी</strong>.
               Built on the principle of <strong>Goal Before Department</strong>: enter details once, verify documents once, and track complete cross-department journeys in one place.
             </p>
             <div style={{ marginTop: "14px", display: "flex", gap: "8px", flexWrap: "wrap" }}>

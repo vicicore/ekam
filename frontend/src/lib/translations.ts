@@ -71,7 +71,7 @@ const en: Record<string, string> = {
   nav_profile: "My EKAM",
   utility_gov: "Government of Maharashtra",
   utility_help: "Help",
-  brand_tag: "One Gateway. Connected Services.",
+  brand_tag: "सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी",
   
   // Hero & Goal Section
   hero_kicker: "MAHARASHTRA CITIZEN SERVICES",
@@ -403,7 +403,7 @@ const hi: Record<string, string> = {
   nav_profile: "मेरा EKAM",
   utility_gov: "महाराष्ट्र शासन",
   utility_help: "सहायता",
-  brand_tag: "निर्बाध आदान-प्रदान और रूपांतरकारी सर्वव्यापकता",
+  brand_tag: "सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी",
 
   // Hero & Goal Section
   hero_kicker: "महाराष्ट्र नागरिक सेवाएँ",
@@ -735,7 +735,7 @@ const mr: Record<string, string> = {
   nav_profile: "माझे EKAM",
   utility_gov: "महाराष्ट्र शासन",
   utility_help: "मदत",
-  brand_tag: "निर्बाध देवाणघेवाण आणि परिवर्तनकारी सर्वव्यापकता",
+  brand_tag: "सर्व सरकारी सेवाएँ • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी",
 
   // Hero & Goal Section
   hero_kicker: "महाराष्ट्र नागरिक सेवा",
