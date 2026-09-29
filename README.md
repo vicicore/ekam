@@ -1,17 +1,17 @@
-# SETU — Seamless Exchange & Transformative Ubiquity
+# EKAM — सर्व सरकारी सेवा • सर्व सरकारी प्रमाणपत्र एकाच ठिकाणी
 
-SETU is a prototype citizen-service orchestration platform for Maharashtra. It demonstrates how a citizen-facing layer can organize government services, schemes, reusable profile/document information, consent, cross-department journeys, grievance tracking, notifications, officer operations, integration adapters and grounded assistance without requiring existing departmental systems to be replaced.
+EKAM is a prototype citizen-service orchestration platform for Maharashtra. It demonstrates how a citizen-facing layer can organize government services, schemes, reusable profile/document information, consent, cross-department journeys, grievance tracking, notifications, officer operations, integration adapters and grounded assistance without requiring existing departmental systems to be replaced.
 
 ## What is included
 
 - Citizen service discovery and service detail flows
-- My SETU profile/dashboard
+- My EKAM profile/dashboard
 - Document Vault and consent-aware reuse
 - Application Journey Tracker
 - Maharashtra district → department → service intelligence
 - Government scheme discovery
 - Grievance registration and tracking
-- SETU Assistant with a grounded knowledge layer
+- EKAM Assistant with a grounded knowledge layer
 - English / Hindi / Marathi language foundation
 - Accessibility controls and responsive/mobile support
 - Officer workspace and department queues
@@ -25,7 +25,7 @@ SETU is a prototype citizen-service orchestration platform for Maharashtra. It d
 - Automated backend tests and frontend smoke/a11y test assets
 - Docker / CI/CD / deployment configuration
 - SIH demo script, judge Q&A, final PPT content and submission checklist
-- SETU patent-style specification and mentor presentation under `docs/submission-assets/`
+- EKAM patent-style specification and mentor presentation under `docs/submission-assets/`
 
 ## Repository structure
 
